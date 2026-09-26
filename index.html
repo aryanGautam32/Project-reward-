@@ -1,4 +1,121 @@
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+async function loadProjects() {
+
+  const projectBox = document.getElementById("projects");
+
+  projectBox.innerHTML = `
+    <p style="text-align:center;padding:20px;color:#777">
+      Projects load हो रहे हैं...
+    </p>
+  `;
+
+  const { data, error } = await supabaseClient
+    .from("projects")
+    .select("*")
+    .eq("status", "active")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error(error);
+
+    projectBox.innerHTML = `
+      <p style="text-align:center;padding:20px;color:red">
+        Projects load नहीं हो पाए।
+      </p>
+    `;
+
+    return;
+  }
+
+  if (!data || data.length === 0) {
+
+    projectBox.innerHTML = `
+      <div style="
+        background:white;
+        padding:25px;
+        border-radius:18px;
+        text-align:center;
+        color:#777;
+      ">
+        अभी कोई active project नहीं है।
+      </div>
+    `;
+
+    return;
+  }
+
+  projectBox.innerHTML = "";
+
+  data.forEach(project => {
+
+    const card = document.createElement("div");
+
+    card.className = "project";
+
+    card.innerHTML = `
+      <div class="project-top">
+
+        <div class="project-logo">
+          📱
+        </div>
+
+        <div class="project-info">
+
+          <h3>${escapeHtml(project.title || "Project")}</h3>
+
+          <p>
+            ${escapeHtml(project.description || "Complete this project.")}
+          </p>
+
+        </div>
+
+        <div class="reward">
+          ₹${Number(project.reward || 0)}
+        </div>
+
+      </div>
+
+      <div class="project-bottom">
+
+        <span class="tag">
+          ${escapeHtml(project.link_type || "Project")}
+        </span>
+
+        <button
+          class="start"
+          onclick="openProject('${project.id}')">
+          Start
+        </button>
+
+      </div>
+    `;
+
+    projectBox.appendChild(card);
+
+  });
+
+}
+
+
+function escapeHtml(value) {
+
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+
+function openProject(projectId) {
+
+  alert("Project ID: " + projectId);
+
+}
+
+
+loadProjects();<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 const SUPABASE_URL = "https://dyzovomxtyshtfftvocb.supabase.co";
