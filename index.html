@@ -3,309 +3,591 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Project & Reward</title>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f5f7fb;
-      color: #222;
-    }
-
-    header {
-      background: #111827;
+      background: #0b1020;
       color: white;
-      padding: 25px 15px;
-      text-align: center;
+      padding-bottom: 80px;
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 30px;
+    .top {
+      padding: 22px 18px;
+      background: linear-gradient(135deg, #111a35, #172554);
+    }
+
+    .brand {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .welcome {
+      margin-top: 20px;
+      color: #aeb9d6;
+      font-size: 14px;
+    }
+
+    .balance {
+      margin-top: 8px;
+      font-size: 32px;
+      font-weight: bold;
     }
 
     .container {
-      max-width: 500px;
-      margin: 25px auto;
-      padding: 15px;
+      max-width: 600px;
+      margin: auto;
+      padding: 18px;
     }
 
-    .card {
-      background: white;
-      padding: 20px;
-      margin-bottom: 18px;
-      border-radius: 14px;
-      box-shadow: 0 3px 12px #ddd;
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: -5px;
     }
 
-    input {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 13px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
+    .stat {
+      background: #151d33;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid #26314f;
+    }
+
+    .stat-title {
+      color: #8995b5;
+      font-size: 13px;
+    }
+
+    .stat-value {
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 8px;
+    }
+
+    .section-title {
+      margin-top: 28px;
+      margin-bottom: 12px;
+      font-size: 19px;
+    }
+
+    .project {
+      background: #151d33;
+      padding: 18px;
+      border-radius: 16px;
+      margin-bottom: 12px;
+      border: 1px solid #26314f;
+    }
+
+    .project h3 {
+      margin: 0 0 8px;
+    }
+
+    .project p {
+      color: #9da8c2;
+      font-size: 14px;
+    }
+
+    .reward {
+      color: #4ade80;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .deadline {
+      color: #fbbf24;
+      font-size: 13px;
+      margin-top: 8px;
     }
 
     button {
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 16px;
+      margin-top: 12px;
       background: #2563eb;
       color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 8px;
+      font-size: 14px;
     }
 
     .logout {
       background: #dc2626;
+      float: right;
     }
 
-    #message {
+    .auth {
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .auth-card {
+      background: #151d33;
+      padding: 22px;
+      border-radius: 18px;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      margin-top: 10px;
+      border-radius: 10px;
+      border: 1px solid #34415f;
+      background: #0b1020;
+      color: white;
+      font-size: 15px;
+    }
+
+    .message {
       margin-top: 15px;
-      font-weight: bold;
+      color: #fbbf24;
     }
 
     #dashboard {
       display: none;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 68px;
+      background: #111827;
+      border-top: 1px solid #27324d;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .nav-item {
+      color: #8792ad;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .nav-item.active {
+      color: #60a5fa;
     }
   </style>
 </head>
 
 <body>
 
-<header>
-  <h1>Project & Reward</h1>
-  <p>Projects complete करें और rewards पाएँ</p>
-</header>
+<!-- LOGIN -->
+<div id="auth">
 
-<div class="container">
+  <div class="auth">
 
-  <!-- AUTH CARD -->
-  <div class="card" id="authCard">
+    <div class="auth-card">
 
-    <h2>Login</h2>
+      <h1>Project & Reward</h1>
 
-    <input
-      type="email"
-      id="loginEmail"
-      placeholder="Email"
-    >
+      <p>Login करके projects complete करें और rewards पाएँ।</p>
 
-    <input
-      type="password"
-      id="loginPassword"
-      placeholder="Password"
-    >
+      <input
+        type="email"
+        id="email"
+        placeholder="Email"
+      >
 
-    <button onclick="login()">Login</button>
+      <input
+        type="password"
+        id="password"
+        placeholder="Password"
+      >
 
-    <hr>
+      <button onclick="login()">
+        Login
+      </button>
 
-    <h2>Sign Up</h2>
+      <button onclick="signup()">
+        Create Account
+      </button>
 
-    <input
-      type="email"
-      id="signupEmail"
-      placeholder="Email"
-    >
+      <div class="message" id="message"></div>
 
-    <input
-      type="password"
-      id="signupPassword"
-      placeholder="Password"
-    >
-
-    <button onclick="signup()">Create Account</button>
-
-    <p id="message"></p>
-
-  </div>
-
-  <!-- DASHBOARD -->
-  <div class="card" id="dashboard">
-
-    <h2>Welcome 👋</h2>
-
-    <p id="userEmail"></p>
-
-    <button onclick="logout()" class="logout">
-      Logout
-    </button>
+    </div>
 
   </div>
 
 </div>
 
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+
+  <div class="top">
+
+    <div class="brand">
+      Project & Reward
+    </div>
+
+    <button class="logout" onclick="logout()">
+      Logout
+    </button>
+
+    <div class="welcome">
+      Welcome back 👋
+    </div>
+
+    <div class="balance">
+      ₹0.00
+    </div>
+
+  </div>
+
+
+  <div class="container">
+
+    <div class="stats">
+
+      <div class="stat">
+        <div class="stat-title">
+          Today's Earnings
+        </div>
+
+        <div class="stat-value">
+          ₹0
+        </div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-title">
+          Pending
+        </div>
+
+        <div class="stat-value">
+          0
+        </div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-title">
+          Approved
+        </div>
+
+        <div class="stat-value">
+          0
+        </div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-title">
+          Completed
+        </div>
+
+        <div class="stat-value">
+          0
+        </div>
+      </div>
+
+    </div>
+
+
+    <h2 class="section-title">
+      Available Projects
+    </h2>
+
+    <div id="projects">
+      <p>Projects loading...</p>
+    </div>
+
+  </div>
+
+
+  <div class="bottom-nav">
+
+    <div class="nav-item active">
+      🏠<br>Home
+    </div>
+
+    <div class="nav-item">
+      📋<br>Projects
+    </div>
+
+    <div class="nav-item">
+      💰<br>Rewards
+    </div>
+
+    <div class="nav-item">
+      👤<br>Profile
+    </div>
+
+  </div>
+
+</div>
+
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
-  const SUPABASE_URL =
-    'https://dyzovomxtyshtfftvocb.supabase.co';
+const SUPABASE_URL =
+'https://dyzovomxtyshtfftvocb.supabase.co';
 
-  const SUPABASE_ANON_KEY =
-    'sb_publishable_EJsYtBEjZU4LIqt4-rnWkQ_vrrTbJ48';
+const SUPABASE_ANON_KEY =
+'sb_publishable_EJsYtBEjZU4LIqt4-rnWkQ_vrrTbJ48';
 
-  const supabaseClient =
-    supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY
-    );
+const supabaseClient =
+supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
 
 
-  // SIGN UP
-  async function signup() {
+// LOGIN
+async function login() {
 
-    const email =
-      document.getElementById('signupEmail').value.trim();
+  const email =
+  document.getElementById('email').value.trim();
 
-    const password =
-      document.getElementById('signupPassword').value;
+  const password =
+  document.getElementById('password').value;
 
-    const message =
-      document.getElementById('message');
+  const message =
+  document.getElementById('message');
 
-    if (!email || !password) {
-      message.innerText =
-        '❌ Email और password भरें।';
-      return;
-    }
+  message.innerText =
+  'Logging in...';
 
-    if (password.length < 6) {
-      message.innerText =
-        '❌ Password कम से कम 6 characters का होना चाहिए।';
-      return;
-    }
+  const { data, error } =
+  await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
 
     message.innerText =
-      '⏳ Account बनाया जा रहा है...';
+    '❌ ' + error.message;
 
-    const { data, error } =
-      await supabaseClient.auth.signUp({
-        email: email,
-        password: password
-      });
+    return;
+  }
 
-    if (error) {
+  showDashboard();
+
+}
+
+
+// SIGN UP
+async function signup() {
+
+  const email =
+  document.getElementById('email').value.trim();
+
+  const password =
+  document.getElementById('password').value;
+
+  const message =
+  document.getElementById('message');
+
+  if (password.length < 6) {
+
+    message.innerText =
+    '❌ Password कम से कम 6 characters का होना चाहिए।';
+
+    return;
+  }
+
+  message.innerText =
+  'Account बनाया जा रहा है...';
+
+  const { data, error } =
+  await supabaseClient.auth.signUp({
+    email,
+    password
+  });
+
+  if (error) {
+
+    message.innerText =
+    '❌ ' + error.message;
+
+    return;
+  }
+
+  if (data.user) {
+
+    const { error: profileError } =
+    await supabaseClient
+    .from('profiles')
+    .insert({
+      id: data.user.id,
+      role: 'user'
+    });
+
+    if (profileError) {
 
       message.innerText =
-        '❌ ' + error.message;
+      '⚠️ Account बन गया। Profile बाद में बनेगी।';
 
       return;
     }
+  }
 
-    if (data.user) {
+  message.innerText =
+  '✅ Account बन गया। अब Login करें।';
 
-      const { error: profileError } =
-        await supabaseClient
-          .from('profiles')
-          .insert({
-            id: data.user.id,
-            role: 'user'
-          });
+}
 
-      if (profileError) {
 
-        message.innerText =
-          '⚠️ Account बन गया, लेकिन profile बनाने में समस्या: ' +
-          profileError.message;
+// SHOW DASHBOARD
+function showDashboard() {
 
-        return;
+  document.getElementById('auth').style.display =
+  'none';
+
+  document.getElementById('dashboard').style.display =
+  'block';
+
+  loadProjects();
+
+}
+
+
+// LOAD PROJECTS
+async function loadProjects() {
+
+  const box =
+  document.getElementById('projects');
+
+  const { data, error } =
+  await supabaseClient
+  .from('projects')
+  .select('*')
+  .eq('status', 'active')
+  .order('created_at', {
+    ascending: false
+  });
+
+  if (error) {
+
+    box.innerHTML =
+    '<p>❌ Projects load नहीं हो सके: ' +
+    error.message +
+    '</p>';
+
+    return;
+  }
+
+  if (!data || data.length === 0) {
+
+    box.innerHTML =
+    '<div class="project">' +
+    '<h3>अभी कोई active project नहीं है</h3>' +
+    '<p>Admin द्वारा project जोड़ने के बाद यहाँ दिखाई देगा।</p>' +
+    '</div>';
+
+    return;
+  }
+
+  box.innerHTML = '';
+
+  data.forEach(project => {
+
+    const div =
+    document.createElement('div');
+
+    div.className =
+    'project';
+
+    div.innerHTML = `
+      <h3>${escapeHtml(project.title || 'Untitled Project')}</h3>
+
+      <p>
+        ${escapeHtml(project.description || '')}
+      </p>
+
+      <div class="reward">
+        Reward: ₹${project.reward || 0}
+      </div>
+
+      <div class="deadline">
+        Deadline:
+        ${project.deadline
+          ? new Date(project.deadline).toLocaleString()
+          : 'Not specified'}
+      </div>
+
+      ${
+        project.link
+        ? `<button onclick="openProject('${encodeURI(project.link)}')">
+             Open Project
+           </button>`
+        : ''
       }
-    }
+    `;
 
-    message.innerText =
-      '✅ Account बन गया! अब Login करें।';
+    box.appendChild(div);
+
+  });
+
+}
+
+
+// OPEN PROJECT
+function openProject(url) {
+
+  window.open(
+    url,
+    '_blank',
+    'noopener,noreferrer'
+  );
+
+}
+
+
+// HTML SAFETY
+function escapeHtml(value) {
+
+  return String(value)
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;')
+  .replace(/'/g, '&#039;');
+
+}
+
+
+// LOGOUT
+async function logout() {
+
+  await supabaseClient.auth.signOut();
+
+  document.getElementById('dashboard').style.display =
+  'none';
+
+  document.getElementById('auth').style.display =
+  'block';
+
+}
+
+
+// CHECK LOGIN
+async function checkUser() {
+
+  const { data } =
+  await supabaseClient.auth.getUser();
+
+  if (data.user) {
+
+    showDashboard();
+
   }
 
-
-  // LOGIN
-  async function login() {
-
-    const email =
-      document.getElementById('loginEmail').value.trim();
-
-    const password =
-      document.getElementById('loginPassword').value;
-
-    const message =
-      document.getElementById('message');
-
-    if (!email || !password) {
-
-      message.innerText =
-        '❌ Email और password भरें।';
-
-      return;
-    }
-
-    message.innerText =
-      '⏳ Login हो रहा है...';
-
-    const { data, error } =
-      await supabaseClient.auth.signInWithPassword({
-        email: email,
-        password: password
-      });
-
-    if (error) {
-
-      message.innerText =
-        '❌ ' + error.message;
-
-      return;
-    }
-
-    showDashboard(data.user);
-  }
+}
 
 
-  // DASHBOARD
-  function showDashboard(user) {
-
-    document.getElementById('authCard').style.display =
-      'none';
-
-    document.getElementById('dashboard').style.display =
-      'block';
-
-    document.getElementById('userEmail').innerText =
-      'Logged in as: ' + user.email;
-  }
-
-
-  // LOGOUT
-  async function logout() {
-
-    await supabaseClient.auth.signOut();
-
-    document.getElementById('dashboard').style.display =
-      'none';
-
-    document.getElementById('authCard').style.display =
-      'block';
-
-    document.getElementById('message').innerText =
-      '✅ Logout हो गया।';
-  }
-
-
-  // CHECK EXISTING LOGIN
-  async function checkUser() {
-
-    const { data } =
-      await supabaseClient.auth.getUser();
-
-    if (data.user) {
-      showDashboard(data.user);
-    }
-  }
-
-  checkUser();
+checkUser();
 
 </script>
 
