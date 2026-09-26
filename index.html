@@ -1,334 +1,1137 @@
+
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
 
-  <title>Project & Reward</title>
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<title>Project & Earning | Complete Projects and Earn</title>
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0b1020;
-      color: white;
-      padding-bottom: 80px;
-    }
+<meta name="description"
+      content="Project & Earning - Complete projects, submit your work and track your earnings online.">
+<meta name="keywords"
+      content="projects, earning, online projects, student earning, work and earn, Project and Earning">
+<meta name="author" content="Project & Earning">
 
-    .top {
-      padding: 22px 18px;
-      background: linear-gradient(135deg, #111a35, #172554);
-    }
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#6c4df6">
 
-    .brand {
-      font-size: 22px;
-      font-weight: bold;
-    }
+<link rel="canonical"
+      href="https://aryangautam32.github.io/Project-reward-/">
 
-    .welcome {
-      margin-top: 20px;
-      color: #aeb9d6;
-      font-size: 14px;
-    }
+<meta property="og:title" content="Project & Earning">
+<meta property="og:description"
+      content="Complete projects and track your earnings.">
+<meta property="og:type" content="website">
+<meta property="og:url"
+      content="https://aryangautam32.github.io/Project-reward-/">
 
-    .balance {
-      margin-top: 8px;
-      font-size: 32px;
-      font-weight: bold;
-    }
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Project & Earning">
+<meta name="twitter:description"
+      content="Complete projects and track your earnings.">
 
-    .container {
-      max-width: 600px;
-      margin: auto;
-      padding: 18px;
-    }
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    .stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: -5px;
-    }
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
-    .stat {
-      background: #151d33;
-      padding: 18px;
-      border-radius: 16px;
-      border: 1px solid #26314f;
-    }
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f5f6fb;
+  color:#171725;
+  min-height:100vh;
+}
 
-    .stat-title {
-      color: #8995b5;
-      font-size: 13px;
-    }
+button,input,textarea,select{
+  font:inherit;
+}
 
-    .stat-value {
-      font-size: 22px;
-      font-weight: bold;
-      margin-top: 8px;
-    }
+button{
+  cursor:pointer;
+}
 
-    .section-title {
-      margin-top: 28px;
-      margin-bottom: 12px;
-      font-size: 19px;
-    }
+.hidden{
+  display:none!important;
+}
 
-    .project {
-      background: #151d33;
-      padding: 18px;
-      border-radius: 16px;
-      margin-bottom: 12px;
-      border: 1px solid #26314f;
-    }
+.app{
+  max-width:520px;
+  margin:auto;
+  min-height:100vh;
+  background:#f5f6fb;
+  padding-bottom:90px;
+}
 
-    .project h3 {
-      margin: 0 0 8px;
-    }
+/* HEADER */
 
-    .project p {
-      color: #9da8c2;
-      font-size: 14px;
-    }
+.header{
+  background:linear-gradient(135deg,#6848f5,#8d62ff);
+  color:white;
+  padding:18px 18px 24px;
+  border-radius:0 0 28px 28px;
+}
 
-    .reward {
-      color: #4ade80;
-      font-size: 18px;
-      font-weight: bold;
-    }
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
 
-    .deadline {
-      color: #fbbf24;
-      font-size: 13px;
-      margin-top: 8px;
-    }
+.logo{
+  width:48px;
+  height:48px;
+  border-radius:15px;
+  background:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  box-shadow:0 5px 20px #0002;
+}
 
-    button {
-      border: 0;
-      border-radius: 10px;
-      padding: 11px 16px;
-      margin-top: 12px;
-      background: #2563eb;
-      color: white;
-      font-size: 14px;
-    }
+.logo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
 
-    .logout {
-      background: #dc2626;
-      float: right;
-    }
+.logoText{
+  font-size:20px;
+  font-weight:800;
+}
 
-    .auth {
-      max-width: 500px;
-      margin: 40px auto;
-      padding: 20px;
-    }
+.headerSmall{
+  margin-top:5px;
+  opacity:.9;
+  font-size:13px;
+}
 
-    .auth-card {
-      background: #151d33;
-      padding: 22px;
-      border-radius: 18px;
-    }
+.headerActions{
+  margin-top:20px;
+  display:flex;
+  gap:10px;
+}
 
-    input {
-      width: 100%;
-      padding: 13px;
-      margin-top: 10px;
-      border-radius: 10px;
-      border: 1px solid #34415f;
-      background: #0b1020;
-      color: white;
-      font-size: 15px;
-    }
+.headerBtn{
+  border:0;
+  padding:10px 14px;
+  border-radius:12px;
+  background:#ffffff22;
+  color:white;
+}
 
-    .message {
-      margin-top: 15px;
-      color: #fbbf24;
-    }
+/* CONTENT */
 
-    #dashboard {
-      display: none;
-    }
+.content{
+  padding:18px;
+}
 
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 68px;
-      background: #111827;
-      border-top: 1px solid #27324d;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-    }
+.sectionTitle{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+}
 
-    .nav-item {
-      color: #8792ad;
-      font-size: 12px;
-      text-align: center;
-    }
+.sectionTitle h2{
+  font-size:20px;
+}
 
-    .nav-item.active {
-      color: #60a5fa;
-    }
-  </style>
+.card{
+  background:white;
+  border-radius:20px;
+  padding:16px;
+  margin-bottom:14px;
+  box-shadow:0 5px 20px #1616270b;
+}
+
+.hero{
+  background:linear-gradient(135deg,#17152c,#32256d);
+  color:white;
+  border-radius:22px;
+  padding:20px;
+  margin-bottom:20px;
+}
+
+.hero h1{
+  font-size:27px;
+  margin-bottom:8px;
+}
+
+.hero p{
+  opacity:.82;
+  line-height:1.5;
+  font-size:14px;
+}
+
+.projectCard{
+  background:white;
+  padding:17px;
+  border-radius:20px;
+  margin-bottom:13px;
+  box-shadow:0 5px 18px #00000009;
+}
+
+.projectTop{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.projectTitle{
+  font-size:17px;
+  font-weight:800;
+}
+
+.typeBadge{
+  background:#eeeaff;
+  color:#6848f5;
+  padding:6px 9px;
+  border-radius:9px;
+  font-size:11px;
+  white-space:nowrap;
+}
+
+.projectDesc{
+  margin:9px 0;
+  color:#666;
+  line-height:1.5;
+  font-size:13px;
+}
+
+.earningBadge{
+  display:inline-block;
+  color:#16804b;
+  background:#e7f8ef;
+  padding:6px 10px;
+  border-radius:9px;
+  font-weight:700;
+  font-size:13px;
+}
+
+.projectButtons{
+  display:flex;
+  gap:8px;
+  margin-top:13px;
+}
+
+.btn{
+  border:0;
+  border-radius:12px;
+  padding:11px 14px;
+  font-weight:700;
+}
+
+.primary{
+  background:#6848f5;
+  color:white;
+}
+
+.secondary{
+  background:#eeeaff;
+  color:#6848f5;
+}
+
+.success{
+  background:#e7f8ef;
+  color:#16804b;
+}
+
+.danger{
+  background:#ffe8e8;
+  color:#c52222;
+}
+
+/* BOTTOM NAV */
+
+.bottomNav{
+  position:fixed;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:100%;
+  max-width:520px;
+  height:72px;
+  background:white;
+  border-top:1px solid #eee;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  z-index:50;
+  box-shadow:0 -5px 20px #0000000b;
+}
+
+.navBtn{
+  background:none;
+  border:0;
+  color:#777;
+  font-size:11px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+}
+
+.navBtn span{
+  font-size:22px;
+}
+
+.navBtn.active{
+  color:#6848f5;
+  font-weight:800;
+}
+
+/* FORMS */
+
+.formGroup{
+  margin-bottom:13px;
+}
+
+.formGroup label{
+  display:block;
+  margin-bottom:6px;
+  font-size:13px;
+  font-weight:700;
+}
+
+.formGroup input,
+.formGroup textarea,
+.formGroup select{
+  width:100%;
+  border:1px solid #ddd;
+  border-radius:12px;
+  padding:12px;
+  background:white;
+  outline:none;
+}
+
+.formGroup textarea{
+  min-height:100px;
+  resize:vertical;
+}
+
+.fullBtn{
+  width:100%;
+  margin-top:6px;
+}
+
+/* LOGIN */
+
+.authScreen{
+  min-height:100vh;
+  background:linear-gradient(145deg,#6044ed,#9b6aff);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.authBox{
+  background:white;
+  width:100%;
+  max-width:420px;
+  border-radius:26px;
+  padding:25px;
+  box-shadow:0 15px 50px #0003;
+}
+
+.authLogo{
+  width:75px;
+  height:75px;
+  border-radius:22px;
+  margin:0 auto 14px;
+  background:#eeeaff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.authLogo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.authTitle{
+  text-align:center;
+  font-size:25px;
+  font-weight:900;
+}
+
+.authSub{
+  text-align:center;
+  color:#777;
+  margin:7px 0 20px;
+  font-size:13px;
+}
+
+.switchAuth{
+  text-align:center;
+  margin-top:15px;
+  font-size:13px;
+}
+
+.switchAuth button{
+  border:0;
+  background:none;
+  color:#6848f5;
+  font-weight:800;
+}
+
+/* STATS */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  margin-bottom:18px;
+}
+
+.stat{
+  background:white;
+  border-radius:18px;
+  padding:15px;
+}
+
+.statLabel{
+  color:#777;
+  font-size:12px;
+}
+
+.statValue{
+  margin-top:6px;
+  font-size:23px;
+  font-weight:900;
+}
+
+/* DETAIL */
+
+.backBtn{
+  border:0;
+  background:none;
+  color:#6848f5;
+  font-weight:800;
+  margin-bottom:15px;
+}
+
+.detailTitle{
+  font-size:25px;
+  font-weight:900;
+  margin-bottom:10px;
+}
+
+.detailText{
+  color:#555;
+  line-height:1.6;
+  white-space:pre-wrap;
+}
+
+.infoRow{
+  display:flex;
+  justify-content:space-between;
+  padding:11px 0;
+  border-bottom:1px solid #eee;
+  font-size:14px;
+}
+
+.infoRow:last-child{
+  border-bottom:0;
+}
+
+.status{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:9px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.pending{
+  background:#fff5d8;
+  color:#a36b00;
+}
+
+.approved{
+  background:#e5f8ed;
+  color:#16804b;
+}
+
+.rejected{
+  background:#ffe6e6;
+  color:#c52222;
+}
+
+/* TOAST */
+
+.toast{
+  position:fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#171725;
+  color:white;
+  padding:12px 16px;
+  border-radius:12px;
+  z-index:100;
+  max-width:90%;
+  font-size:13px;
+  display:none;
+}
+
+/* EMPTY */
+
+.empty{
+  text-align:center;
+  padding:35px 15px;
+  color:#777;
+}
+
+/* ADMIN */
+
+.adminBox{
+  border:1px solid #e3ddff;
+  background:#faf9ff;
+}
+
+.adminTitle{
+  font-size:18px;
+  font-weight:900;
+  margin-bottom:15px;
+}
+
+.reviewButtons{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:360px){
+  .projectButtons{
+    flex-direction:column;
+  }
+}
+</style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
-<div id="auth">
+<div id="toast" class="toast"></div>
 
-  <div class="auth">
+<!-- AUTH -->
+<div id="authScreen" class="authScreen">
 
-    <div class="auth-card">
+  <div class="authBox">
 
-      <h1>Project & Reward</h1>
+    <div class="authLogo">
+      <!-- अपना logo लगाने के लिए नीचे src बदल सकते हो -->
+      <img
+        src="https://dummyimage.com/150x150/6848f5/ffffff&text=P%26E"
+        alt="Project and Earning Logo">
+    </div>
 
-      <p>Login करके projects complete करें और rewards पाएँ।</p>
+    <div class="authTitle">Project & Earning</div>
+    <div class="authSub">
+      Complete projects and track your earnings
+    </div>
 
-      <input
-        type="email"
-        id="email"
-        placeholder="Email"
-      >
+    <!-- LOGIN -->
 
-      <input
-        type="password"
-        id="password"
-        placeholder="Password"
-      >
+    <div id="loginForm">
 
-      <button onclick="login()">
+      <div class="formGroup">
+        <label>Email</label>
+        <input id="loginEmail"
+               type="email"
+               placeholder="Enter email">
+      </div>
+
+      <div class="formGroup">
+        <label>Password</label>
+        <input id="loginPassword"
+               type="password"
+               placeholder="Enter password">
+      </div>
+
+      <button class="btn primary fullBtn"
+              onclick="login()">
         Login
       </button>
 
-      <button onclick="signup()">
+      <div class="switchAuth">
+        New user?
+        <button onclick="showSignup()">Create account</button>
+      </div>
+
+    </div>
+
+    <!-- SIGNUP -->
+
+    <div id="signupForm" class="hidden">
+
+      <div class="formGroup">
+        <label>Email</label>
+        <input id="signupEmail"
+               type="email"
+               placeholder="Enter email">
+      </div>
+
+      <div class="formGroup">
+        <label>Password</label>
+        <input id="signupPassword"
+               type="password"
+               placeholder="Create password">
+      </div>
+
+      <button class="btn primary fullBtn"
+              onclick="signup()">
         Create Account
       </button>
 
-      <div class="message" id="message"></div>
+      <div class="switchAuth">
+        Already have an account?
+        <button onclick="showLogin()">Login</button>
+      </div>
 
     </div>
 
   </div>
-
 </div>
 
 
-<!-- DASHBOARD -->
-<div id="dashboard">
+<!-- APP -->
 
-  <div class="top">
+<div id="app" class="app hidden">
+
+  <header class="header">
 
     <div class="brand">
-      Project & Reward
+
+      <div class="logo">
+        <img
+          src="https://dummyimage.com/150x150/6848f5/ffffff&text=P%26E"
+          alt="Project and Earning">
+      </div>
+
+      <div>
+        <div class="logoText">Project & Earning</div>
+        <div class="headerSmall">
+          Projects • Work • Earning
+        </div>
+      </div>
+
     </div>
 
-    <button class="logout" onclick="logout()">
-      Logout
+    <div class="headerActions">
+
+      <button class="headerBtn"
+              onclick="openPage('profile')">
+        👤 Profile
+      </button>
+
+      <button class="headerBtn"
+              onclick="logout()">
+        Logout
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <main class="content">
+
+    <!-- HOME -->
+
+    <section id="page-home">
+
+      <div class="hero">
+
+        <h1>Complete Projects & Earn</h1>
+
+        <p>
+          Active projects dekho, instructions follow karo,
+          work submit karo aur apni earning track karo.
+        </p>
+
+      </div>
+
+      <div class="sectionTitle">
+        <h2>🔥 Active Projects</h2>
+
+        <button class="btn secondary"
+                onclick="openPage('projects')">
+          View All
+        </button>
+      </div>
+
+      <div id="homeProjects">
+        <div class="empty">Loading projects...</div>
+      </div>
+
+    </section>
+
+
+    <!-- PROJECTS -->
+
+    <section id="page-projects" class="hidden">
+
+      <div class="sectionTitle">
+        <h2>All Projects</h2>
+      </div>
+
+      <div id="allProjects">
+        <div class="empty">Loading projects...</div>
+      </div>
+
+    </section>
+
+
+    <!-- DETAIL -->
+
+    <section id="page-detail" class="hidden">
+
+      <button class="backBtn"
+              onclick="openPage('projects')">
+        ← Back to Projects
+      </button>
+
+      <div id="projectDetail"></div>
+
+    </section>
+
+
+    <!-- SUBMIT -->
+
+    <section id="page-submit" class="hidden">
+
+      <button class="backBtn"
+              onclick="openPage('detail')">
+        ← Back
+      </button>
+
+      <div class="card">
+
+        <h2>Submit Your Work</h2>
+
+        <p id="submitProjectName"
+           style="color:#777;margin:7px 0 18px">
+        </p>
+
+        <div class="formGroup">
+          <label>Work / Submission Details</label>
+
+          <textarea id="submissionText"
+                    placeholder="Apne kaam ke baare mein likho..."></textarea>
+        </div>
+
+        <div class="formGroup">
+          <label>Screenshot / Proof URL</label>
+
+          <input id="screenshotUrl"
+                 type="url"
+                 placeholder="https://...">
+        </div>
+
+        <button class="btn primary fullBtn"
+                onclick="submitWork()">
+          Submit Work
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- MY SUBMISSIONS -->
+
+    <section id="page-submissions" class="hidden">
+
+      <div class="sectionTitle">
+        <h2>My Submissions</h2>
+      </div>
+
+      <div id="mySubmissions">
+        <div class="empty">Loading...</div>
+      </div>
+
+    </section>
+
+
+    <!-- EARNING -->
+
+    <section id="page-earning" class="hidden">
+
+      <div class="sectionTitle">
+        <h2>💰 Earning</h2>
+      </div>
+
+      <div class="stats">
+
+        <div class="stat">
+          <div class="statLabel">Total Earning</div>
+          <div id="totalEarning"
+               class="statValue">
+            ₹0
+          </div>
+        </div>
+
+        <div class="stat">
+          <div class="statLabel">Approved Payments</div>
+          <div id="approvedCount"
+               class="statValue">
+            0
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- WITHDRAW -->
+
+      <div class="card">
+
+        <h3>💸 Withdraw</h3>
+
+        <p style="color:#777;font-size:13px;margin:8px 0 15px">
+          Available earning ke withdrawal ke liye payment
+          method select karo.
+        </p>
+
+        <div class="formGroup">
+
+          <label>Amount</label>
+
+          <input id="withdrawAmount"
+                 type="number"
+                 min="1"
+                 placeholder="Enter amount">
+
+        </div>
+
+        <div class="formGroup">
+
+          <label>Payment Method</label>
+
+          <select id="withdrawMethod">
+
+            <option value="UPI">UPI</option>
+            <option value="Bank">Bank Transfer</option>
+
+          </select>
+
+        </div>
+
+        <button class="btn primary fullBtn"
+                onclick="requestWithdraw()">
+          Request Withdrawal
+        </button>
+
+        <p style="font-size:11px;color:#888;margin-top:10px">
+          Withdrawal request system Payment table ke
+          existing structure ke saath integrate hoga.
+        </p>
+
+      </div>
+
+
+      <!-- TRANSACTIONS -->
+
+      <div class="card">
+
+        <h3>📋 Transactions</h3>
+
+        <div id="transactions">
+          <div class="empty">Loading...</div>
+        </div>
+
+      </div>
+
+
+      <!-- WITHDRAWAL HISTORY -->
+
+      <div class="card">
+
+        <h3>🧾 Withdrawal History</h3>
+
+        <div id="withdrawHistory">
+          <div class="empty">
+            Withdrawal history yahan dikhegi.
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- PROFILE -->
+
+    <section id="page-profile" class="hidden">
+
+      <div class="sectionTitle">
+        <h2>👤 Profile</h2>
+      </div>
+
+      <div class="card">
+
+        <div class="infoRow">
+          <span>Email</span>
+          <strong id="profileEmail">-</strong>
+        </div>
+
+        <div class="infoRow">
+          <span>Role</span>
+          <strong id="profileRole">User</strong>
+        </div>
+
+      </div>
+
+
+      <!-- ADMIN -->
+
+      <div id="adminArea" class="hidden">
+
+        <div class="card adminBox">
+
+          <div class="adminTitle">
+            🛠️ Owner / Admin
+          </div>
+
+          <button class="btn primary fullBtn"
+                  onclick="openPage('admin-projects')">
+            Manage Projects
+          </button>
+
+          <button class="btn secondary fullBtn"
+                  style="margin-top:8px"
+                  onclick="openPage('admin-submissions')">
+            Review Submissions
+          </button>
+
+          <button class="btn secondary fullBtn"
+                  style="margin-top:8px"
+                  onclick="openPage('admin-parents')">
+            Parent Management
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <button class="btn danger fullBtn"
+              onclick="logout()">
+        Logout
+      </button>
+
+    </section>
+
+
+    <!-- ADMIN PROJECTS -->
+
+    <section id="page-admin-projects" class="hidden">
+
+      <button class="backBtn"
+              onclick="openPage('profile')">
+        ← Back
+      </button>
+
+      <div class="card adminBox">
+
+        <h2>Add Project</h2>
+
+        <div class="formGroup">
+          <label>Project Title</label>
+          <input id="adminTitle"
+                 placeholder="Project name">
+        </div>
+
+        <div class="formGroup">
+          <label>Description</label>
+          <textarea id="adminDescription"
+                    placeholder="Project description"></textarea>
+        </div>
+
+        <div class="formGroup">
+          <label>Instructions</label>
+          <textarea id="adminInstructions"
+                    placeholder="Project instructions"></textarea>
+        </div>
+
+        <div class="formGroup">
+          <label>Earning Amount</label>
+          <input id="adminReward"
+                 type="number"
+                 placeholder="100">
+        </div>
+
+        <div class="formGroup">
+          <label>Deadline</label>
+          <input id="adminDeadline"
+                 type="datetime-local">
+        </div>
+
+        <div class="formGroup">
+          <label>Link Type</label>
+
+          <select id="adminLinkType">
+
+            <option value="Game">🎮 Game</option>
+            <option value="Shopping App">🛒 Shopping App</option>
+            <option value="UPI App">💳 UPI App</option>
+            <option value="Demat App">📈 Demat App</option>
+            <option value="Meesho">🛍️ Meesho</option>
+            <option value="Flipkart">🛒 Flipkart</option>
+            <option value="Other Link">🔗 Other Link</option>
+
+          </select>
+
+        </div>
+
+        <div class="formGroup">
+          <label>Project Link</label>
+          <input id="adminLink"
+                 type="url"
+                 placeholder="https://...">
+        </div>
+
+        <div class="formGroup">
+          <label>Status</label>
+
+          <select id="adminStatus">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+
+        </div>
+
+        <button class="btn primary fullBtn"
+                onclick="createProject()">
+          + Add Project
+        </button>
+
+      </div>
+
+      <div class="sectionTitle">
+        <h2>Existing Projects</h2>
+      </div>
+
+      <div id="adminProjectList"></div>
+
+    </section>
+
+
+    <!-- ADMIN SUBMISSIONS -->
+
+    <section id="page-admin-submissions" class="hidden">
+
+      <button class="backBtn"
+              onclick="openPage('profile')">
+        ← Back
+      </button>
+
+      <div class="sectionTitle">
+        <h2>Review Submissions</h2>
+      </div>
+
+      <div id="adminSubmissions">
+        <div class="empty">Loading...</div>
+      </div>
+
+    </section>
+
+
+    <!-- ADMIN PARENTS -->
+
+    <section id="page-admin-parents" class="hidden">
+
+      <button class="backBtn"
+              onclick="openPage('profile')">
+        ← Back
+      </button>
+
+      <div class="card adminBox">
+
+        <h2>Parent Management</h2>
+
+        <p style="color:#666;line-height:1.5;margin-top:10px">
+          Parent account ko secure tarike se Supabase
+          authentication ke through create/invite karna hoga.
+          Iske liye service-role key ko website mein rakhna
+          safe nahi hai.
+        </p>
+
+        <p style="color:#666;line-height:1.5;margin-top:10px">
+          Is section ko baad mein secure Supabase Edge
+          Function se connect kiya ja sakta hai.
+        </p>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- BOTTOM NAV -->
+
+  <nav class="bottomNav">
+
+    <button class="navBtn active"
+            data-page="home"
+            onclick="openPage('home')">
+      <span>🏠</span>
+      Home
     </button>
 
-    <div class="welcome">
-      Welcome back 👋
-    </div>
+    <button class="navBtn"
+            data-page="projects"
+            onclick="openPage('projects')">
+      <span>📂</span>
+      Projects
+    </button>
 
-    <div class="balance">
-      ₹0.00
-    </div>
+    <button class="navBtn"
+            data-page="earning"
+            onclick="openPage('earning')">
+      <span>💰</span>
+      Earning
+    </button>
 
-  </div>
+    <button class="navBtn"
+            data-page="submissions"
+            onclick="openPage('submissions')">
+      <span>📋</span>
+      My Work
+    </button>
 
+    <button class="navBtn"
+            data-page="profile"
+            onclick="openPage('profile')">
+      <span>👤</span>
+      Profile
+    </button>
 
-  <div class="container">
-
-    <div class="stats">
-
-      <div class="stat">
-        <div class="stat-title">
-          Today's Earnings
-        </div>
-
-        <div class="stat-value">
-          ₹0
-        </div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-title">
-          Pending
-        </div>
-
-        <div class="stat-value">
-          0
-        </div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-title">
-          Approved
-        </div>
-
-        <div class="stat-value">
-          0
-        </div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-title">
-          Completed
-        </div>
-
-        <div class="stat-value">
-          0
-        </div>
-      </div>
-
-    </div>
-
-
-    <h2 class="section-title">
-      Available Projects
-    </h2>
-
-    <div id="projects">
-      <p>Projects loading...</p>
-    </div>
-
-  </div>
-
-
-  <div class="bottom-nav">
-
-    <div class="nav-item active">
-      🏠<br>Home
-    </div>
-
-    <div class="nav-item">
-      📋<br>Projects
-    </div>
-
-    <div class="nav-item">
-      💰<br>Rewards
-    </div>
-
-    <div class="nav-item">
-      👤<br>Profile
-    </div>
-
-  </div>
+  </nav>
 
 </div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
+
+/* =========================================
+   SUPABASE
+========================================= */
 
 const SUPABASE_URL =
 'https://dyzovomxtyshtfftvocb.supabase.co';
@@ -343,251 +1146,1466 @@ supabase.createClient(
 );
 
 
-// LOGIN
-async function login() {
+/* =========================================
+   GLOBAL STATE
+========================================= */
 
-  const email =
-  document.getElementById('email').value.trim();
+let currentUser = null;
+let currentProfile = null;
+let selectedProject = null;
+let allProjectData = [];
 
-  const password =
-  document.getElementById('password').value;
 
-  const message =
-  document.getElementById('message');
+/* =========================================
+   TOAST
+========================================= */
 
-  message.innerText =
-  'Logging in...';
+function toast(message){
 
-  const { data, error } =
-  await supabaseClient.auth.signInWithPassword({
-    email,
-    password
-  });
+  const box =
+    document.getElementById("toast");
 
-  if (error) {
+  box.textContent = message;
+  box.style.display = "block";
 
-    message.innerText =
-    '❌ ' + error.message;
-
-    return;
-  }
-
-  showDashboard();
-
+  setTimeout(()=>{
+    box.style.display = "none";
+  },3000);
 }
 
 
-// SIGN UP
-async function signup() {
+/* =========================================
+   AUTH UI
+========================================= */
+
+function showSignup(){
+
+  document.getElementById("loginForm")
+    .classList.add("hidden");
+
+  document.getElementById("signupForm")
+    .classList.remove("hidden");
+}
+
+function showLogin(){
+
+  document.getElementById("signupForm")
+    .classList.add("hidden");
+
+  document.getElementById("loginForm")
+    .classList.remove("hidden");
+}
+
+
+/* =========================================
+   SIGNUP
+========================================= */
+
+async function signup(){
 
   const email =
-  document.getElementById('email').value.trim();
+    document.getElementById("signupEmail").value.trim();
 
   const password =
-  document.getElementById('password').value;
+    document.getElementById("signupPassword").value;
 
-  const message =
-  document.getElementById('message');
+  if(!email || !password){
 
-  if (password.length < 6) {
-
-    message.innerText =
-    '❌ Password कम से कम 6 characters का होना चाहिए।';
-
+    toast("Email aur password bharna zaroori hai.");
     return;
   }
 
-  message.innerText =
-  'Account बनाया जा रहा है...';
+  if(password.length < 6){
 
-  const { data, error } =
-  await supabaseClient.auth.signUp({
-    email,
-    password
-  });
-
-  if (error) {
-
-    message.innerText =
-    '❌ ' + error.message;
-
+    toast("Password kam se kam 6 characters ka hona chahiye.");
     return;
   }
 
-  if (data.user) {
-
-    const { error: profileError } =
-    await supabaseClient
-    .from('profiles')
-    .insert({
-      id: data.user.id,
-      role: 'user'
+  const {data,error} =
+    await supabaseClient.auth.signUp({
+      email,
+      password
     });
 
-    if (profileError) {
+  if(error){
 
-      message.innerText =
-      '⚠️ Account बन गया। Profile बाद में बनेगी।';
+    toast(error.message);
+    return;
+  }
 
-      return;
+  if(data.user){
+
+    /*
+      Profile insert.
+      Agar email confirmation ON hai,
+      user confirmation ke baad login karega.
+    */
+
+    const {error:profileError} =
+      await supabaseClient
+        .from("profiles")
+        .insert({
+          id:data.user.id,
+          role:"user"
+        });
+
+    if(profileError){
+
+      console.log(profileError);
+
+      /*
+        Existing RLS/security ke कारण profile insert
+        fail ho sakta hai. Auth account phir bhi create
+        ho chuka ho sakta hai.
+      */
     }
   }
 
-  message.innerText =
-  '✅ Account बन गया। अब Login करें।';
-
-}
-
-
-// SHOW DASHBOARD
-function showDashboard() {
-
-  document.getElementById('auth').style.display =
-  'none';
-
-  document.getElementById('dashboard').style.display =
-  'block';
-
-  loadProjects();
-
-}
-
-
-// LOAD PROJECTS
-async function loadProjects() {
-
-  const box =
-  document.getElementById('projects');
-
-  const { data, error } =
-  await supabaseClient
-  .from('projects')
-  .select('*')
-  .eq('status', 'active')
-  .order('created_at', {
-    ascending: false
-  });
-
-  if (error) {
-
-    box.innerHTML =
-    '<p>❌ Projects load नहीं हो सके: ' +
-    error.message +
-    '</p>';
-
-    return;
-  }
-
-  if (!data || data.length === 0) {
-
-    box.innerHTML =
-    '<div class="project">' +
-    '<h3>अभी कोई active project नहीं है</h3>' +
-    '<p>Admin द्वारा project जोड़ने के बाद यहाँ दिखाई देगा।</p>' +
-    '</div>';
-
-    return;
-  }
-
-  box.innerHTML = '';
-
-  data.forEach(project => {
-
-    const div =
-    document.createElement('div');
-
-    div.className =
-    'project';
-
-    div.innerHTML = `
-      <h3>${escapeHtml(project.title || 'Untitled Project')}</h3>
-
-      <p>
-        ${escapeHtml(project.description || '')}
-      </p>
-
-      <div class="reward">
-        Reward: ₹${project.reward || 0}
-      </div>
-
-      <div class="deadline">
-        Deadline:
-        ${project.deadline
-          ? new Date(project.deadline).toLocaleString()
-          : 'Not specified'}
-      </div>
-
-      ${
-        project.link
-        ? `<button onclick="openProject('${encodeURI(project.link)}')">
-             Open Project
-           </button>`
-        : ''
-      }
-    `;
-
-    box.appendChild(div);
-
-  });
-
-}
-
-
-// OPEN PROJECT
-function openProject(url) {
-
-  window.open(
-    url,
-    '_blank',
-    'noopener,noreferrer'
+  toast(
+    "Account create ho gaya. Agar email confirmation enabled hai to email verify karo."
   );
 
+  showLogin();
 }
 
 
-// HTML SAFETY
-function escapeHtml(value) {
+/* =========================================
+   LOGIN
+========================================= */
 
-  return String(value)
-  .replace(/&/g, '&amp;')
-  .replace(/</g, '&lt;')
-  .replace(/>/g, '&gt;')
-  .replace(/"/g, '&quot;')
-  .replace(/'/g, '&#039;');
+async function login(){
 
+  const email =
+    document.getElementById("loginEmail").value.trim();
+
+  const password =
+    document.getElementById("loginPassword").value;
+
+  if(!email || !password){
+
+    toast("Email aur password bharna zaroori hai.");
+    return;
+  }
+
+  const {data,error} =
+    await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
+
+  if(error){
+
+    toast(error.message);
+    return;
+  }
+
+  currentUser = data.user;
+
+  await loadProfile();
+
+  document
+    .getElementById("authScreen")
+    .classList.add("hidden");
+
+  document
+    .getElementById("app")
+    .classList.remove("hidden");
+
+  await loadProjects();
+
+  openPage("home");
 }
 
 
-// LOGOUT
-async function logout() {
+/* =========================================
+   LOGOUT
+========================================= */
+
+async function logout(){
 
   await supabaseClient.auth.signOut();
 
-  document.getElementById('dashboard').style.display =
-  'none';
+  currentUser = null;
+  currentProfile = null;
 
-  document.getElementById('auth').style.display =
-  'block';
+  document
+    .getElementById("app")
+    .classList.add("hidden");
 
+  document
+    .getElementById("authScreen")
+    .classList.remove("hidden");
+
+  showLogin();
 }
 
 
-// CHECK LOGIN
-async function checkUser() {
+/* =========================================
+   PROFILE
+========================================= */
 
-  const { data } =
-  await supabaseClient.auth.getUser();
+async function loadProfile(){
 
-  if (data.user) {
+  if(!currentUser) return;
 
-    showDashboard();
+  let {data,error} =
+    await supabaseClient
+      .from("profiles")
+      .select("id,role")
+      .eq("id",currentUser.id)
+      .maybeSingle();
 
+  if(error){
+
+    console.log(error);
   }
 
+  /*
+    अगर profile नहीं है तो user profile create करने
+    की कोशिश.
+  */
+
+  if(!data){
+
+    const {data:newProfile} =
+      await supabaseClient
+        .from("profiles")
+        .insert({
+          id:currentUser.id,
+          role:"user"
+        })
+        .select()
+        .maybeSingle();
+
+    data = newProfile;
+  }
+
+  currentProfile =
+    data || {
+      id:currentUser.id,
+      role:"user"
+    };
+
+  document.getElementById("profileEmail")
+    .textContent =
+      currentUser.email || "-";
+
+  document.getElementById("profileRole")
+    .textContent =
+      currentProfile.role || "user";
+
+  const adminArea =
+    document.getElementById("adminArea");
+
+  if(
+    currentProfile.role === "admin" ||
+    currentProfile.role === "parent"
+  ){
+
+    adminArea.classList.remove("hidden");
+
+  }else{
+
+    adminArea.classList.add("hidden");
+  }
 }
 
 
-checkUser();
+/* =========================================
+   PAGE NAVIGATION
+========================================= */
+
+const pages = [
+  "home",
+  "projects",
+  "detail",
+  "submit",
+  "submissions",
+  "earning",
+  "profile",
+  "admin-projects",
+  "admin-submissions",
+  "admin-parents"
+];
+
+function openPage(page){
+
+  pages.forEach(p=>{
+
+    const el =
+      document.getElementById("page-"+p);
+
+    if(el){
+
+      el.classList.toggle(
+        "hidden",
+        p !== page
+      );
+    }
+
+  });
+
+  document.querySelectorAll(".navBtn")
+    .forEach(btn=>{
+
+      btn.classList.toggle(
+        "active",
+        btn.dataset.page === page
+      );
+
+    });
+
+
+  if(page === "projects"){
+    renderProjects(allProjectData,"allProjects");
+  }
+
+  if(page === "submissions"){
+    loadMySubmissions();
+  }
+
+  if(page === "earning"){
+    loadPayments();
+  }
+
+  if(page === "admin-projects"){
+    loadAdminProjects();
+  }
+
+  if(page === "admin-submissions"){
+    loadAdminSubmissions();
+  }
+
+  if(page === "profile"){
+    loadProfile();
+  }
+}
+
+
+/* =========================================
+   LOAD PROJECTS
+========================================= */
+
+async function loadProjects(){
+
+  const {data,error} =
+    await supabaseClient
+      .from("projects")
+      .select(
+        "id,title,description,instructions,reward,deadline,link,link_type,status,created_by,created_at"
+      )
+      .eq("status","active")
+      .order("created_at",{ascending:false});
+
+  if(error){
+
+    console.log(error);
+
+    document.getElementById("homeProjects")
+      .innerHTML =
+      `<div class="empty">
+        Projects load nahi ho rahe.
+      </div>`;
+
+    return;
+  }
+
+  allProjectData = data || [];
+
+  renderProjects(
+    allProjectData.slice(0,4),
+    "homeProjects"
+  );
+}
+
+
+/* =========================================
+   RENDER PROJECTS
+========================================= */
+
+function renderProjects(projects,containerId){
+
+  const container =
+    document.getElementById(containerId);
+
+  if(!container) return;
+
+  if(!projects.length){
+
+    container.innerHTML =
+      `<div class="empty">
+        Abhi koi active project available nahi hai.
+      </div>`;
+
+    return;
+  }
+
+  container.innerHTML =
+    projects.map(project=>{
+
+      const reward =
+        Number(project.reward || 0);
+
+      return `
+
+      <div class="projectCard">
+
+        <div class="projectTop">
+
+          <div class="projectTitle">
+            ${escapeHtml(project.title || "Untitled Project")}
+          </div>
+
+          <div class="typeBadge">
+            ${escapeHtml(project.link_type || "Project")}
+          </div>
+
+        </div>
+
+        <div class="projectDesc">
+          ${escapeHtml(
+            project.description ||
+            "Project details ke liye open karein."
+          )}
+        </div>
+
+        <span class="earningBadge">
+          ₹${reward}
+        </span>
+
+        <div class="projectButtons">
+
+          <button
+            class="btn primary"
+            onclick="showProject('${project.id}')">
+            View Project
+          </button>
+
+          ${
+            project.link
+            ?
+            `<button
+              class="btn secondary"
+              onclick="openExternalLink('${encodeURI(project.link)}')">
+              Open Link
+            </button>`
+            :
+            ""
+          }
+
+        </div>
+
+      </div>
+
+      `;
+
+    }).join("");
+}
+
+
+/* =========================================
+   PROJECT DETAIL
+========================================= */
+
+function showProject(id){
+
+  selectedProject =
+    allProjectData.find(
+      p => String(p.id) === String(id)
+    );
+
+  if(!selectedProject){
+
+    toast("Project nahi mila.");
+    return;
+  }
+
+  const p = selectedProject;
+
+  document.getElementById("projectDetail")
+    .innerHTML = `
+
+    <div class="card">
+
+      <div class="typeBadge"
+           style="display:inline-block;margin-bottom:12px">
+        ${escapeHtml(p.link_type || "Project")}
+      </div>
+
+      <div class="detailTitle">
+        ${escapeHtml(p.title || "")}
+      </div>
+
+      <div class="detailText">
+        ${escapeHtml(p.description || "")}
+      </div>
+
+      <br>
+
+      <div class="infoRow">
+        <span>Earning</span>
+        <strong style="color:#16804b">
+          ₹${Number(p.reward || 0)}
+        </strong>
+      </div>
+
+      <div class="infoRow">
+        <span>Deadline</span>
+        <strong>
+          ${
+            p.deadline
+            ?
+            new Date(p.deadline).toLocaleString("en-IN")
+            :
+            "No deadline"
+          }
+        </strong>
+      </div>
+
+      <div class="infoRow">
+        <span>Type</span>
+        <strong>
+          ${escapeHtml(p.link_type || "Other")}
+        </strong>
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>📌 Instructions</h3>
+
+      <div class="detailText"
+           style="margin-top:10px">
+        ${escapeHtml(
+          p.instructions ||
+          "No special instructions."
+        )}
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      ${
+        p.link
+        ?
+        `<button
+          class="btn secondary fullBtn"
+          onclick="openExternalLink('${encodeURI(p.link)}')">
+          🔗 Open Project Link
+        </button>`
+        :
+        `<p style="color:#777">
+          Is project ke liye external link available nahi hai.
+        </p>`
+      }
+
+      <button
+        class="btn primary fullBtn"
+        style="margin-top:10px"
+        onclick="openSubmitPage()">
+        📝 Submit Work
+      </button>
+
+    </div>
+  `;
+
+  openPage("detail");
+}
+
+
+/* =========================================
+   OPEN EXTERNAL LINK
+========================================= */
+
+function openExternalLink(url){
+
+  if(!url){
+
+    toast("Link available nahi hai.");
+    return;
+  }
+
+  let finalUrl = url.trim();
+
+  if(
+    !finalUrl.startsWith("http://") &&
+    !finalUrl.startsWith("https://")
+  ){
+
+    finalUrl =
+      "https://" + finalUrl;
+  }
+
+  window.open(
+    finalUrl,
+    "_blank",
+    "noopener,noreferrer"
+  );
+}
+
+
+/* =========================================
+   SUBMIT PAGE
+========================================= */
+
+function openSubmitPage(){
+
+  if(!selectedProject){
+
+    toast("Project select karo.");
+    return;
+  }
+
+  document.getElementById("submitProjectName")
+    .textContent =
+      selectedProject.title;
+
+  document.getElementById("submissionText")
+    .value = "";
+
+  document.getElementById("screenshotUrl")
+    .value = "";
+
+  openPage("submit");
+}
+
+
+/* =========================================
+   SUBMIT WORK
+========================================= */
+
+async function submitWork(){
+
+  if(!currentUser){
+
+    toast("Pehle login karo.");
+    return;
+  }
+
+  if(!selectedProject){
+
+    toast("Project select karo.");
+    return;
+  }
+
+  const submission =
+    document.getElementById("submissionText")
+      .value.trim();
+
+  const screenshot =
+    document.getElementById("screenshotUrl")
+      .value.trim();
+
+  if(!submission){
+
+    toast("Submission details bharna zaroori hai.");
+    return;
+  }
+
+  if(!screenshot){
+
+    toast("Screenshot/Proof URL daalo.");
+    return;
+  }
+
+  const {error} =
+    await supabaseClient
+      .from("Submission")
+      .insert({
+        project_id:selectedProject.id,
+        "User_id":currentUser.id,
+        screenshot_url:screenshot,
+        submission:submission,
+        status:"pending"
+      });
+
+  if(error){
+
+    console.log(error);
+
+    toast(
+      "Submission nahi hua: " + error.message
+    );
+
+    return;
+  }
+
+  toast("Work successfully submit ho gaya!");
+
+  openPage("submissions");
+}
+
+
+/* =========================================
+   MY SUBMISSIONS
+========================================= */
+
+async function loadMySubmissions(){
+
+  const container =
+    document.getElementById("mySubmissions");
+
+  container.innerHTML =
+    `<div class="empty">Loading...</div>`;
+
+  const {data,error} =
+    await supabaseClient
+      .from("Submission")
+      .select(
+        "id,project_id,screenshot_url,submission,status"
+      )
+      .eq("User_id",currentUser.id)
+      .order("id",{ascending:false});
+
+  if(error){
+
+    console.log(error);
+
+    container.innerHTML =
+      `<div class="empty">
+        Submissions load nahi ho rahi.
+      </div>`;
+
+    return;
+  }
+
+  if(!data || !data.length){
+
+    container.innerHTML =
+      `<div class="empty">
+        Abhi koi submission nahi hai.
+      </div>`;
+
+    return;
+  }
+
+  container.innerHTML =
+    data.map(s=>{
+
+      const status =
+        String(s.status || "pending").toLowerCase();
+
+      return `
+
+      <div class="card">
+
+        <div class="infoRow">
+          <span>Status</span>
+
+          <span class="status ${status}">
+            ${escapeHtml(status)}
+          </span>
+        </div>
+
+        <div class="detailText"
+             style="margin-top:10px">
+          ${escapeHtml(s.submission || "")}
+        </div>
+
+        ${
+          s.screenshot_url
+          ?
+          `<button
+             class="btn secondary fullBtn"
+             style="margin-top:10px"
+             onclick="openExternalLink('${encodeURI(s.screenshot_url)}')">
+             📸 Open Proof
+           </button>`
+          :
+          ""
+        }
+
+      </div>
+
+      `;
+
+    }).join("");
+}
+
+
+/* =========================================
+   PAYMENT / EARNING
+========================================= */
+
+async function loadPayments(){
+
+  if(!currentUser) return;
+
+  const transactionBox =
+    document.getElementById("transactions");
+
+  transactionBox.innerHTML =
+    `<div class="empty">Loading...</div>`;
+
+  /*
+    Payment table ke exact columns:
+    "Users id"
+    Amount
+    Status
+    transction
+    Payment method
+  */
+
+  const {data,error} =
+    await supabaseClient
+      .from("Payment")
+      .select(
+        '"Users id", "Amount", "Status", "transction", "Payment method"'
+      )
+      .eq('"Users id"',currentUser.id);
+
+  if(error){
+
+    console.log(error);
+
+    transactionBox.innerHTML =
+      `<div class="empty">
+        Payment data load nahi ho raha.
+      </div>`;
+
+    return;
+  }
+
+  const payments = data || [];
+
+  let total = 0;
+  let approved = 0;
+
+  payments.forEach(p=>{
+
+    const status =
+      String(p.Status || "").toLowerCase();
+
+    if(
+      status === "approved" ||
+      status === "success" ||
+      status === "paid"
+    ){
+
+      total += Number(p.Amount || 0);
+      approved++;
+    }
+
+  });
+
+  document.getElementById("totalEarning")
+    .textContent =
+      "₹" + total.toFixed(2);
+
+  document.getElementById("approvedCount")
+    .textContent =
+      approved;
+
+
+  if(!payments.length){
+
+    transactionBox.innerHTML =
+      `<div class="empty">
+        Abhi koi transaction nahi hai.
+      </div>`;
+
+    return;
+  }
+
+  transactionBox.innerHTML =
+    payments.map(p=>{
+
+      const status =
+        String(p.Status || "pending")
+          .toLowerCase();
+
+      return `
+
+      <div class="infoRow">
+
+        <div>
+          <strong>
+            ₹${Number(p.Amount || 0).toFixed(2)}
+          </strong>
+
+          <div style="font-size:11px;color:#888">
+            ${escapeHtml(
+              p["Payment method"] || "-"
+            )}
+          </div>
+        </div>
+
+        <span class="status ${status}">
+          ${escapeHtml(p.Status || "Pending")}
+        </span>
+
+      </div>
+
+      `;
+
+    }).join("");
+}
+
+
+/* =========================================
+   WITHDRAW
+========================================= */
+
+async function requestWithdraw(){
+
+  const amount =
+    Number(
+      document.getElementById("withdrawAmount").value
+    );
+
+  const method =
+    document.getElementById("withdrawMethod").value;
+
+  if(!amount || amount <= 0){
+
+    toast("Valid amount daalo.");
+    return;
+  }
+
+  /*
+    Payment table ke actual schema mein withdrawal
+    request ko clearly distinguish karne ke liye
+    transaction field use ki ja rahi hai.
+
+    Agar tumhari existing Payment table mein
+    transaction values ka specific format hai,
+    usko later standardise kar sakte hain.
+  */
+
+  const {error} =
+    await supabaseClient
+      .from("Payment")
+      .insert({
+        "Users id":currentUser.id,
+        "Amount":amount,
+        "Status":"pending",
+        "transction":"withdrawal_request",
+        "Payment method":method
+      });
+
+  if(error){
+
+    console.log(error);
+
+    toast(
+      "Withdrawal request nahi bani: " +
+      error.message
+    );
+
+    return;
+  }
+
+  document.getElementById("withdrawAmount")
+    .value = "";
+
+  toast("Withdrawal request submit ho gayi.");
+
+  await loadPayments();
+}
+
+
+/* =========================================
+   ADMIN CHECK
+========================================= */
+
+function isAdminOrParent(){
+
+  return currentProfile &&
+    (
+      currentProfile.role === "admin" ||
+      currentProfile.role === "parent"
+    );
+}
+
+
+/* =========================================
+   ADMIN CREATE PROJECT
+========================================= */
+
+async function createProject(){
+
+  if(!isAdminOrParent()){
+
+    toast("Access denied.");
+    return;
+  }
+
+  const title =
+    document.getElementById("adminTitle").value.trim();
+
+  const description =
+    document.getElementById("adminDescription").value.trim();
+
+  const instructions =
+    document.getElementById("adminInstructions").value.trim();
+
+  const reward =
+    Number(
+      document.getElementById("adminReward").value
+    );
+
+  const deadlineInput =
+    document.getElementById("adminDeadline").value;
+
+  const linkType =
+    document.getElementById("adminLinkType").value;
+
+  const link =
+    document.getElementById("adminLink").value.trim();
+
+  const status =
+    document.getElementById("adminStatus").value;
+
+  if(!title){
+
+    toast("Project title daalo.");
+    return;
+  }
+
+  const {error} =
+    await supabaseClient
+      .from("projects")
+      .insert({
+        title,
+        description,
+        instructions,
+        reward,
+        deadline:
+          deadlineInput
+          ?
+          new Date(deadlineInput).toISOString()
+          :
+          null,
+        link,
+        link_type:linkType,
+        status,
+        created_by:currentUser.id
+      });
+
+  if(error){
+
+    console.log(error);
+
+    toast(
+      "Project create nahi hua: " +
+      error.message
+    );
+
+    return;
+  }
+
+  toast("Project successfully add ho gaya.");
+
+  document.getElementById("adminTitle").value = "";
+  document.getElementById("adminDescription").value = "";
+  document.getElementById("adminInstructions").value = "";
+  document.getElementById("adminReward").value = "";
+  document.getElementById("adminDeadline").value = "";
+  document.getElementById("adminLink").value = "";
+
+  await loadProjects();
+  await loadAdminProjects();
+}
+
+
+/* =========================================
+   ADMIN PROJECT LIST
+========================================= */
+
+async function loadAdminProjects(){
+
+  if(!isAdminOrParent()) return;
+
+  const box =
+    document.getElementById("adminProjectList");
+
+  box.innerHTML =
+    `<div class="empty">Loading...</div>`;
+
+  const {data,error} =
+    await supabaseClient
+      .from("projects")
+      .select("*")
+      .order("created_at",{ascending:false});
+
+  if(error){
+
+    box.innerHTML =
+      `<div class="empty">
+        Projects load nahi hue.
+      </div>`;
+
+    return;
+  }
+
+  if(!data.length){
+
+    box.innerHTML =
+      `<div class="empty">
+        No projects.
+      </div>`;
+
+    return;
+  }
+
+  box.innerHTML =
+    data.map(p=>{
+
+      return `
+
+      <div class="card">
+
+        <div class="projectTop">
+
+          <strong>
+            ${escapeHtml(p.title || "")}
+          </strong>
+
+          <span class="typeBadge">
+            ${escapeHtml(p.status || "")}
+          </span>
+
+        </div>
+
+        <div style="margin-top:8px;color:#777;font-size:13px">
+          ${escapeHtml(p.link_type || "Other")}
+          • ₹${Number(p.reward || 0)}
+        </div>
+
+        <div class="projectButtons">
+
+          <button
+            class="btn secondary"
+            onclick="toggleProject('${p.id}','${p.status}')">
+            ${
+              p.status === "active"
+              ? "Deactivate"
+              : "Activate"
+            }
+          </button>
+
+          <button
+            class="btn danger"
+            onclick="deleteProject('${p.id}')">
+            Delete
+          </button>
+
+        </div>
+
+      </div>
+
+      `;
+
+    }).join("");
+}
+
+
+/* =========================================
+   TOGGLE PROJECT
+========================================= */
+
+async function toggleProject(id,status){
+
+  const newStatus =
+    status === "active"
+    ? "inactive"
+    : "active";
+
+  const {error} =
+    await supabaseClient
+      .from("projects")
+      .update({
+        status:newStatus
+      })
+      .eq("id",id);
+
+  if(error){
+
+    toast(error.message);
+    return;
+  }
+
+  toast("Project status update ho gaya.");
+
+  await loadProjects();
+  await loadAdminProjects();
+}
+
+
+/* =========================================
+   DELETE PROJECT
+========================================= */
+
+async function deleteProject(id){
+
+  if(!confirm(
+    "Kya tum is project ko delete karna chahte ho?"
+  )) return;
+
+  const {error} =
+    await supabaseClient
+      .from("projects")
+      .delete()
+      .eq("id",id);
+
+  if(error){
+
+    toast(error.message);
+    return;
+  }
+
+  toast("Project delete ho gaya.");
+
+  await loadProjects();
+  await loadAdminProjects();
+}
+
+
+/* =========================================
+   ADMIN SUBMISSIONS
+========================================= */
+
+async function loadAdminSubmissions(){
+
+  if(!isAdminOrParent()) return;
+
+  const box =
+    document.getElementById("adminSubmissions");
+
+  box.innerHTML =
+    `<div class="empty">Loading...</div>`;
+
+  const {data,error} =
+    await supabaseClient
+      .from("Submission")
+      .select(
+        "id,project_id,\"User_id\",screenshot_url,submission,status"
+      )
+      .order("id",{ascending:false});
+
+  if(error){
+
+    console.log(error);
+
+    box.innerHTML =
+      `<div class="empty">
+        Submissions load nahi ho rahi.
+      </div>`;
+
+    return;
+  }
+
+  if(!data.length){
+
+    box.innerHTML =
+      `<div class="empty">
+        No submissions.
+      </div>`;
+
+    return;
+  }
+
+  box.innerHTML =
+    data.map(s=>{
+
+      const status =
+        String(s.status || "pending").toLowerCase();
+
+      return `
+
+      <div class="card">
+
+        <div class="infoRow">
+          <span>User ID</span>
+          <strong style="font-size:10px">
+            ${escapeHtml(s["User_id"] || "")}
+          </strong>
+        </div>
+
+        <div class="infoRow">
+          <span>Status</span>
+          <span class="status ${status}">
+            ${escapeHtml(s.status || "pending")}
+          </span>
+        </div>
+
+        <div class="detailText"
+             style="margin-top:10px">
+          ${escapeHtml(s.submission || "")}
+        </div>
+
+        ${
+          s.screenshot_url
+          ?
+          `<button
+             class="btn secondary fullBtn"
+             style="margin-top:10px"
+             onclick="openExternalLink('${encodeURI(s.screenshot_url)}')">
+             📸 View Proof
+           </button>`
+          :
+          ""
+        }
+
+        ${
+          status === "pending"
+          ?
+          `<div class="reviewButtons">
+
+             <button
+               class="btn success"
+               onclick="reviewSubmission('${s.id}','approved')">
+               ✓ Approve
+             </button>
+
+             <button
+               class="btn danger"
+               onclick="reviewSubmission('${s.id}','rejected')">
+               ✕ Reject
+             </button>
+
+           </div>`
+          :
+          ""
+        }
+
+      </div>
+
+      `;
+
+    }).join("");
+}
+
+
+/* =========================================
+   REVIEW SUBMISSION
+========================================= */
+
+async function reviewSubmission(id,status){
+
+  if(!isAdminOrParent()){
+
+    toast("Access denied.");
+    return;
+  }
+
+  const {error} =
+    await supabaseClient
+      .from("Submission")
+      .update({
+        status
+      })
+      .eq("id",id);
+
+  if(error){
+
+    toast(error.message);
+    return;
+  }
+
+  toast(
+    status === "approved"
+    ? "Submission approved."
+    : "Submission rejected."
+  );
+
+  await loadAdminSubmissions();
+}
+
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
+function escapeHtml(value){
+
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+
+/* =========================================
+   INITIAL SESSION
+========================================= */
+
+async function init(){
+
+  const {
+    data:{
+      session
+    }
+  } =
+    await supabaseClient.auth.getSession();
+
+  if(session && session.user){
+
+    currentUser =
+      session.user;
+
+    await loadProfile();
+
+    document
+      .getElementById("authScreen")
+      .classList.add("hidden");
+
+    document
+      .getElementById("app")
+      .classList.remove("hidden");
+
+    await loadProjects();
+
+    openPage("home");
+
+  }else{
+
+    document
+      .getElementById("authScreen")
+      .classList.remove("hidden");
+
+    document
+      .getElementById("app")
+      .classList.add("hidden");
+  }
+}
+
+
+/* =========================================
+   AUTH STATE
+========================================= */
+
+supabaseClient.auth
+  .onAuthStateChange(
+    async(event,session)=>{
+
+      if(
+        event === "SIGNED_IN" &&
+        session
+      ){
+
+        currentUser =
+          session.user;
+
+      }
+
+      if(event === "SIGNED_OUT"){
+
+        currentUser = null;
+        currentProfile = null;
+      }
+
+    }
+  );
+
+
+init();
 
 </script>
 
