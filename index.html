@@ -1,4 +1,134 @@
-<section id="projectDetails"
+<section id="submitScreen"
+style="
+display:none;
+position:fixed;
+inset:0;
+background:#f6f7fb;
+z-index:110;
+overflow-y:auto;
+">
+
+  <div style="
+    background:white;
+    padding:16px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    position:sticky;
+    top:0;
+    z-index:5;
+    box-shadow:0 2px 10px #0000000d;
+  ">
+
+    <button
+      onclick="closeSubmit()"
+      style="
+        border:0;
+        background:#f0edff;
+        width:40px;
+        height:40px;
+        border-radius:50%;
+        font-size:20px;
+      ">
+      ←
+    </button>
+
+    <h2>Submit Work</h2>
+
+  </div>
+
+
+  <div class="container">
+
+    <div style="
+      background:white;
+      border-radius:22px;
+      padding:20px;
+    ">
+
+      <h2 id="submitProjectTitle">
+        Submit your work
+      </h2>
+
+      <p style="
+        color:#777;
+        font-size:13px;
+        margin-top:8px;
+      ">
+        अपना काम और proof नीचे submit करें।
+      </p>
+
+
+      <label style="
+        display:block;
+        margin-top:20px;
+        font-weight:700;
+        font-size:14px;
+      ">
+        Proof / Screenshot URL
+      </label>
+
+      <input
+        id="screenshotUrl"
+        type="url"
+        placeholder="https://..."
+        style="
+          width:100%;
+          margin-top:8px;
+          padding:13px;
+          border:1px solid #ddd;
+          border-radius:12px;
+          outline:none;
+        "
+      >
+
+
+      <label style="
+        display:block;
+        margin-top:18px;
+        font-weight:700;
+        font-size:14px;
+      ">
+        Work Details
+      </label>
+
+      <textarea
+        id="submissionText"
+        placeholder="आपने project कैसे पूरा किया, यहाँ लिखें..."
+        style="
+          width:100%;
+          height:130px;
+          margin-top:8px;
+          padding:13px;
+          border:1px solid #ddd;
+          border-radius:12px;
+          resize:none;
+          outline:none;
+        "
+      ></textarea>
+
+
+      <button
+        onclick="saveSubmission()"
+        style="
+          width:100%;
+          margin-top:20px;
+          border:0;
+          background:#6046e8;
+          color:white;
+          padding:15px;
+          border-radius:12px;
+          font-size:15px;
+          font-weight:700;
+        ">
+        Submit Work
+      </button>
+
+    </div>
+
+  </div>
+
+</section><section id="projectDetails"
 style="
 display:none;
 position:fixed;
