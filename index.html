@@ -50,6 +50,7 @@
       padding: 12px 20px;
       border-radius: 8px;
       font-size: 16px;
+      cursor: pointer;
     }
 
     .badge {
@@ -58,6 +59,11 @@
       color: #166534;
       padding: 6px 12px;
       border-radius: 20px;
+    }
+
+    #connection {
+      margin-top: 15px;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -74,7 +80,10 @@
     <div class="card">
       <h2>Welcome 👋</h2>
       <p>Project & Reward में आपका स्वागत है।</p>
-      <button>Login</button>
+
+      <button onclick="testSupabase()">Supabase Test</button>
+
+      <p id="connection">Connection checking...</p>
     </div>
 
     <div class="card">
@@ -89,6 +98,46 @@
     </div>
 
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const SUPABASE_URL =
+      'https://dyzovomxtyshtfftvocb.supabase.co';
+
+    const SUPABASE_ANON_KEY =
+      'sb_publishable_EJsYtBEjZU4LIqt4-rnWkQ_vrrTbJ48';
+
+    const supabaseClient = supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
+
+    async function testSupabase() {
+
+      const connection =
+        document.getElementById('connection');
+
+      connection.innerText = '⏳ Connecting...';
+
+      const { data, error } = await supabaseClient
+        .from('projects')
+        .select('id')
+        .limit(1);
+
+      if (error) {
+
+        connection.innerText =
+          '❌ Connection error: ' + error.message;
+
+      } else {
+
+        connection.innerText =
+          '✅ Supabase connected successfully!';
+
+      }
+    }
+  </script>
 
 </body>
 </html>
