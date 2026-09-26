@@ -1,4 +1,186 @@
-<section id="myWorkScreen"
+async function openMyWork() {
+
+  const screen =
+    document.getElementById("myWorkScreen");
+
+  screen.style.display = "block";
+
+  const list =
+    document.getElementById("myWorkList");
+
+  list.innerHTML = `
+    <p style="text-align:center;padding:30px;color:#777">
+      Loading...
+    </p>
+  `;
+
+
+  const {
+    data: {
+      user
+    }
+  } = await supabaseClient.auth.getUser();
+
+
+  if (!user) {
+
+    list.innerHTML = `
+      <p style="text-align:center;padding:30px">
+        Please login first.
+      </p>
+    `;
+
+    return;
+
+  }
+
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .from("Submission")
+    .select("*")
+    .eq("User_id", user.id)
+    .order("Id", {
+      ascending:false
+    });
+
+
+  if (error) {
+
+    console.error(error);
+
+    list.innerHTML = `
+      <p style="color:red;text-align:center;padding:30px">
+        ${escapeHtml(error.message)}
+      </p>
+    `;
+
+    return;
+
+  }
+
+
+  if (!data || data.length === 0) {
+
+    list.innerHTML = `
+      <div style="
+        background:white;
+        padding:30px;
+        border-radius:20px;
+        text-align:center;
+      ">
+        <div style="font-size:40px">📋</div>
+
+        <h3 style="margin-top:10px">
+          No submissions yet
+        </h3>
+
+        <p style="
+          color:#777;
+          margin-top:6px;
+          font-size:13px;
+        ">
+          Complete a project and submit your work.
+        </p>
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  list.innerHTML = "";
+
+
+  data.forEach(item => {
+
+    let statusClass = "";
+
+    if (item.status === "approved") {
+      statusClass = "color:#159957;";
+    }
+
+    if (item.status === "rejected") {
+      statusClass = "color:#d93025;";
+    }
+
+    if (item.status === "pending") {
+      statusClass = "color:#e69500;";
+    }
+
+
+    const card =
+      document.createElement("div");
+
+    card.style.cssText = `
+      background:white;
+      padding:16px;
+      border-radius:20px;
+      margin-bottom:13px;
+      box-shadow:0 3px 12px #00000008;
+    `;
+
+
+    card.innerHTML = `
+
+      <div style="
+        display:flex;
+        justify-content:space-between;
+        gap:10px;
+      ">
+
+        <strong>
+          Project Submission
+        </strong>
+
+        <strong style="${statusClass}">
+          ${(item.status || "pending").toUpperCase()}
+        </strong>
+
+      </div>
+
+
+      <p style="
+        color:#777;
+        font-size:13px;
+        margin-top:10px;
+      ">
+        ${escapeHtml(item.Submission || "")}
+      </p>
+
+
+      <a
+        href="${escapeHtml(item.Screenshot_url || "#")}"
+        target="_blank"
+        style="
+          display:block;
+          margin-top:12px;
+          color:#6046e8;
+          font-weight:700;
+          font-size:13px;
+        ">
+        🔗 View Proof
+      </a>
+
+    `;
+
+
+    list.appendChild(card);
+
+  });
+
+}
+
+
+function closeMyWork() {
+
+  document.getElementById("myWorkScreen")
+    .style.display = "none";
+
+}<section id="myWorkScreen"
 style="
 display:none;
 position:fixed;
