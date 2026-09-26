@@ -25,12 +25,8 @@
       font-size: 30px;
     }
 
-    header p {
-      margin: 8px 0 0;
-    }
-
     .container {
-      max-width: 900px;
+      max-width: 500px;
       margin: 25px auto;
       padding: 15px;
     }
@@ -43,6 +39,16 @@
       box-shadow: 0 3px 12px #ddd;
     }
 
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 13px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
     button {
       background: #2563eb;
       color: white;
@@ -51,93 +57,257 @@
       border-radius: 8px;
       font-size: 16px;
       cursor: pointer;
+      margin-top: 8px;
     }
 
-    .badge {
-      display: inline-block;
-      background: #dcfce7;
-      color: #166534;
-      padding: 6px 12px;
-      border-radius: 20px;
+    .logout {
+      background: #dc2626;
     }
 
-    #connection {
+    #message {
       margin-top: 15px;
       font-weight: bold;
+    }
+
+    #dashboard {
+      display: none;
     }
   </style>
 </head>
 
 <body>
 
-  <header>
-    <h1>Project & Reward</h1>
-    <p>Projects complete करें और rewards पाएँ</p>
-  </header>
+<header>
+  <h1>Project & Reward</h1>
+  <p>Projects complete करें और rewards पाएँ</p>
+</header>
 
-  <div class="container">
+<div class="container">
 
-    <div class="card">
-      <h2>Welcome 👋</h2>
-      <p>Project & Reward में आपका स्वागत है।</p>
+  <!-- AUTH CARD -->
+  <div class="card" id="authCard">
 
-      <button onclick="testSupabase()">Supabase Test</button>
+    <h2>Login</h2>
 
-      <p id="connection">Connection checking...</p>
-    </div>
+    <input
+      type="email"
+      id="loginEmail"
+      placeholder="Email"
+    >
 
-    <div class="card">
-      <h2>Available Projects</h2>
-      <p>Active projects यहाँ दिखाई देंगे।</p>
-      <span class="badge">Active</span>
-    </div>
+    <input
+      type="password"
+      id="loginPassword"
+      placeholder="Password"
+    >
 
-    <div class="card">
-      <h2>My Submissions</h2>
-      <p>आपके submitted projects यहाँ दिखाई देंगे।</p>
-    </div>
+    <button onclick="login()">Login</button>
+
+    <hr>
+
+    <h2>Sign Up</h2>
+
+    <input
+      type="email"
+      id="signupEmail"
+      placeholder="Email"
+    >
+
+    <input
+      type="password"
+      id="signupPassword"
+      placeholder="Password"
+    >
+
+    <button onclick="signup()">Create Account</button>
+
+    <p id="message"></p>
 
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- DASHBOARD -->
+  <div class="card" id="dashboard">
 
-  <script>
-    const SUPABASE_URL =
-      'https://dyzovomxtyshtfftvocb.supabase.co';
+    <h2>Welcome 👋</h2>
 
-    const SUPABASE_ANON_KEY =
-      'sb_publishable_EJsYtBEjZU4LIqt4-rnWkQ_vrrTbJ48';
+    <p id="userEmail"></p>
 
-    const supabaseClient = supabase.createClient(
+    <button onclick="logout()" class="logout">
+      Logout
+    </button>
+
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+  const SUPABASE_URL =
+    'https://dyzovomxtyshtfftvocb.supabase.co';
+
+  const SUPABASE_ANON_KEY =
+    'sb_publishable_EJsYtBEjZU4LIqt4-rnWkQ_vrrTbJ48';
+
+  const supabaseClient =
+    supabase.createClient(
       SUPABASE_URL,
       SUPABASE_ANON_KEY
     );
 
-    async function testSupabase() {
 
-      const connection =
-        document.getElementById('connection');
+  // SIGN UP
+  async function signup() {
 
-      connection.innerText = '⏳ Connecting...';
+    const email =
+      document.getElementById('signupEmail').value.trim();
 
-      const { data, error } = await supabaseClient
-        .from('projects')
-        .select('id')
-        .limit(1);
+    const password =
+      document.getElementById('signupPassword').value;
 
-      if (error) {
+    const message =
+      document.getElementById('message');
 
-        connection.innerText =
-          '❌ Connection error: ' + error.message;
+    if (!email || !password) {
+      message.innerText =
+        '❌ Email और password भरें।';
+      return;
+    }
 
-      } else {
+    if (password.length < 6) {
+      message.innerText =
+        '❌ Password कम से कम 6 characters का होना चाहिए।';
+      return;
+    }
 
-        connection.innerText =
-          '✅ Supabase connected successfully!';
+    message.innerText =
+      '⏳ Account बनाया जा रहा है...';
 
+    const { data, error } =
+      await supabaseClient.auth.signUp({
+        email: email,
+        password: password
+      });
+
+    if (error) {
+
+      message.innerText =
+        '❌ ' + error.message;
+
+      return;
+    }
+
+    if (data.user) {
+
+      const { error: profileError } =
+        await supabaseClient
+          .from('profiles')
+          .insert({
+            id: data.user.id,
+            role: 'user'
+          });
+
+      if (profileError) {
+
+        message.innerText =
+          '⚠️ Account बन गया, लेकिन profile बनाने में समस्या: ' +
+          profileError.message;
+
+        return;
       }
     }
-  </script>
+
+    message.innerText =
+      '✅ Account बन गया! अब Login करें।';
+  }
+
+
+  // LOGIN
+  async function login() {
+
+    const email =
+      document.getElementById('loginEmail').value.trim();
+
+    const password =
+      document.getElementById('loginPassword').value;
+
+    const message =
+      document.getElementById('message');
+
+    if (!email || !password) {
+
+      message.innerText =
+        '❌ Email और password भरें।';
+
+      return;
+    }
+
+    message.innerText =
+      '⏳ Login हो रहा है...';
+
+    const { data, error } =
+      await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
+
+    if (error) {
+
+      message.innerText =
+        '❌ ' + error.message;
+
+      return;
+    }
+
+    showDashboard(data.user);
+  }
+
+
+  // DASHBOARD
+  function showDashboard(user) {
+
+    document.getElementById('authCard').style.display =
+      'none';
+
+    document.getElementById('dashboard').style.display =
+      'block';
+
+    document.getElementById('userEmail').innerText =
+      'Logged in as: ' + user.email;
+  }
+
+
+  // LOGOUT
+  async function logout() {
+
+    await supabaseClient.auth.signOut();
+
+    document.getElementById('dashboard').style.display =
+      'none';
+
+    document.getElementById('authCard').style.display =
+      'block';
+
+    document.getElementById('message').innerText =
+      '✅ Logout हो गया।';
+  }
+
+
+  // CHECK EXISTING LOGIN
+  async function checkUser() {
+
+    const { data } =
+      await supabaseClient.auth.getUser();
+
+    if (data.user) {
+      showDashboard(data.user);
+    }
+  }
+
+  checkUser();
+
+</script>
 
 </body>
 </html>
