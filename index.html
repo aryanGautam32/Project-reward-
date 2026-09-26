@@ -1,1 +1,3449 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Project & Earning</title>
+  <meta name="description" content="Project & Earning - Complete projects and earning platform">
+  <meta name="keywords" content="projects, earning, online work, student earning">
+  <meta name="theme-color" content="#6c5ce7">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f5ff;
+      color: #222;
+      min-height: 100vh;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* AUTH */
+
+    #authScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #6c5ce7, #00cec9);
+    }
+
+    .auth-box {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      border-radius: 22px;
+      padding: 25px;
+      box-shadow: 0 15px 50px rgba(0,0,0,.2);
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 30px;
+      font-weight: bold;
+      color: #6c5ce7;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #777;
+      margin-bottom: 25px;
+    }
+
+    .auth-box h2 {
+      margin-bottom: 18px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      outline: none;
+      background: #fafafa;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: #6c5ce7;
+      background: white;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 13px;
+      border-radius: 12px;
+      color: white;
+      background: #6c5ce7;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .btn:hover {
+      opacity: .9;
+    }
+
+    .btn-green {
+      background: #00b894;
+    }
+
+    .btn-red {
+      background: #d63031;
+    }
+
+    .btn-orange {
+      background: #e17055;
+    }
+
+    .btn-gray {
+      background: #636e72;
+    }
+
+    .switch-auth {
+      text-align: center;
+      margin-top: 18px;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .switch-auth span {
+      color: #6c5ce7;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* APP */
+
+    #app {
+      min-height: 100vh;
+      padding-bottom: 75px;
+    }
+
+    .topbar {
+      background: white;
+      padding: 15px 17px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0,0,0,.08);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-title {
+      font-size: 21px;
+      font-weight: bold;
+      color: #6c5ce7;
+    }
+
+    .logout-btn {
+      background: #ffeaea;
+      color: #d63031;
+      padding: 8px 12px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      margin: auto;
+      padding: 17px;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* HOME */
+
+    .welcome-card {
+      background: linear-gradient(135deg, #6c5ce7, #8e7dff);
+      color: white;
+      border-radius: 20px;
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 10px 25px rgba(108,92,231,.25);
+    }
+
+    .welcome-card h2 {
+      margin-bottom: 7px;
+    }
+
+    .welcome-card p {
+      opacity: .9;
+      font-size: 14px;
+    }
+
+    .balance-card {
+      background: white;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 15px rgba(0,0,0,.06);
+    }
+
+    .balance-label {
+      color: #777;
+      font-size: 14px;
+    }
+
+    .balance {
+      font-size: 32px;
+      font-weight: bold;
+      color: #00b894;
+      margin-top: 5px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 20px 0 12px;
+    }
+
+    /* PROJECT CARDS */
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 14px;
+    }
+
+    .project-card {
+      background: white;
+      border-radius: 17px;
+      padding: 17px;
+      box-shadow: 0 4px 15px rgba(0,0,0,.06);
+    }
+
+    .project-type {
+      display: inline-block;
+      background: #eeeaff;
+      color: #6c5ce7;
+      padding: 5px 9px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .project-card h3 {
+      margin-bottom: 8px;
+    }
+
+    .project-card p {
+      color: #666;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .reward {
+      color: #00a884;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .project-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .small-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 13px;
+      background: #6c5ce7;
+      color: white;
+    }
+
+    .small-btn.green {
+      background: #00b894;
+    }
+
+    .small-btn.gray {
+      background: #636e72;
+    }
+
+    /* DETAIL */
+
+    .detail-card {
+      background: white;
+      padding: 20px;
+      border-radius: 18px;
+      box-shadow: 0 4px 15px rgba(0,0,0,.06);
+    }
+
+    .detail-card h2 {
+      margin-bottom: 10px;
+    }
+
+    .detail-row {
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      font-size: 12px;
+      color: #777;
+      margin-bottom: 4px;
+    }
+
+    .detail-value {
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+
+    /* SUBMISSIONS */
+
+    .submission-card {
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 3px 12px rgba(0,0,0,.05);
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .status.pending {
+      background: #fff4d6;
+      color: #b77900;
+    }
+
+    .status.approved {
+      background: #d9fff2;
+      color: #00875a;
+    }
+
+    .status.rejected {
+      background: #ffe0e0;
+      color: #c0392b;
+    }
+
+    /* EARNING */
+
+    .earning-card {
+      background: white;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,.06);
+    }
+
+    .earning-total {
+      font-size: 35px;
+      font-weight: bold;
+      color: #00b894;
+      margin: 10px 0 15px;
+    }
+
+    /* PROFILE */
+
+    .profile-card {
+      background: white;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,.06);
+    }
+
+    /* ADMIN */
+
+    .admin-box {
+      background: white;
+      padding: 18px;
+      border-radius: 18px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,.06);
+    }
+
+    .admin-box h3 {
+      margin-bottom: 15px;
+    }
+
+    .admin-project {
+      border: 1px solid #eee;
+      border-radius: 12px;
+      padding: 13px;
+      margin-bottom: 10px;
+    }
+
+    .admin-project-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .admin-project-actions button {
+      padding: 9px;
+      border-radius: 9px;
+      flex: 1;
+      color: white;
+      font-weight: bold;
+    }
+
+    .admin-submission {
+      border: 1px solid #eee;
+      padding: 14px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    /* BOTTOM NAV */
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 68px;
+      background: white;
+      box-shadow: 0 -3px 15px rgba(0,0,0,.1);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 30;
+    }
+
+    .nav-btn {
+      background: transparent;
+      color: #777;
+      font-size: 11px;
+      text-align: center;
+      padding: 5px;
+    }
+
+    .nav-btn .icon {
+      display: block;
+      font-size: 21px;
+      margin-bottom: 3px;
+    }
+
+    .nav-btn.active {
+      color: #6c5ce7;
+      font-weight: bold;
+    }
+
+    /* MESSAGE */
+
+    #messageBox {
+      position: fixed;
+      top: 75px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 30px);
+      max-width: 500px;
+      padding: 13px 16px;
+      border-radius: 12px;
+      background: #222;
+      color: white;
+      z-index: 100;
+      display: none;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    #messageBox.success {
+      background: #00b894;
+    }
+
+    #messageBox.error {
+      background: #d63031;
+    }
+
+    #messageBox.info {
+      background: #6c5ce7;
+    }
+
+    .empty {
+      background: white;
+      padding: 25px;
+      text-align: center;
+      border-radius: 15px;
+      color: #777;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 30px;
+      color: #777;
+    }
+
+    .link-box {
+      background: #f5f5ff;
+      padding: 12px;
+      border-radius: 10px;
+      word-break: break-all;
+      margin: 10px 0;
+    }
+
+    .danger-zone {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+
+    @media(max-width:500px) {
+      .project-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- MESSAGE -->
+<div id="messageBox"></div>
+
+<!-- AUTH SCREEN -->
+<div id="authScreen">
+
+  <div class="auth-box">
+
+    <div class="logo">Project & Earning</div>
+    <div class="subtitle">Projects complete karo aur Earning pao</div>
+
+    <!-- LOGIN -->
+    <div id="loginBox">
+
+      <h2>Login</h2>
+
+      <div class="field">
+        <label>Email</label>
+        <input id="loginEmail" type="email" placeholder="Email">
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <input id="loginPassword" type="password" placeholder="Password">
+      </div>
+
+      <button class="btn" onclick="loginUser()">Login</button>
+
+      <div class="switch-auth">
+        Account nahi hai?
+        <span onclick="showSignup()">Create Account</span>
+      </div>
+
+    </div>
+
+    <!-- SIGNUP -->
+    <div id="signupBox" class="hidden">
+
+      <h2>Create Account</h2>
+
+      <div class="field">
+        <label>Name</label>
+        <input id="signupName" type="text" placeholder="Apna naam">
+      </div>
+
+      <div class="field">
+        <label>Mobile</label>
+        <input id="signupMobile" type="tel" placeholder="Mobile number">
+      </div>
+
+      <div class="field">
+        <label>Email</label>
+        <input id="signupEmail" type="email" placeholder="Email">
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <input id="signupPassword" type="password" placeholder="Password">
+      </div>
+
+      <button class="btn" onclick="createAccount()">Create Account</button>
+
+      <div class="switch-auth">
+        Pehle se account hai?
+        <span onclick="showLogin()">Login</span>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- MAIN APP -->
+<div id="app" class="hidden">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+
+    <div class="topbar-title">
+      Project & Earning
+    </div>
+
+    <button class="logout-btn" onclick="logoutUser()">
+      Logout
+    </button>
+
+  </div>
+
+
+  <div class="container">
+
+    <!-- HOME -->
+    <div id="page-home" class="page active">
+
+      <div class="welcome-card">
+        <h2>Hello, <span id="homeName">User</span> 👋</h2>
+        <p>Available projects complete karke earning karo.</p>
+      </div>
+
+      <div class="balance-card">
+        <div class="balance-label">Available Earning</div>
+        <div class="balance" id="homeBalance">₹0</div>
+      </div>
+
+      <div class="section-title">
+        Latest Projects
+      </div>
+
+      <div id="homeProjects" class="project-grid">
+        <div class="loading">Projects load ho rahe hain...</div>
+      </div>
+
+    </div>
+
+
+    <!-- PROJECTS -->
+    <div id="page-projects" class="page">
+
+      <div class="section-title">
+        All Projects
+      </div>
+
+      <div id="allProjects" class="project-grid">
+        <div class="loading">Projects load ho rahe hain...</div>
+      </div>
+
+    </div>
+
+
+    <!-- PROJECT DETAIL -->
+    <div id="page-detail" class="page">
+
+      <button class="small-btn gray" onclick="openPage('projects')" style="margin-bottom:15px;">
+        ← Back
+      </button>
+
+      <div id="projectDetail"></div>
+
+    </div>
+
+
+    <!-- SUBMIT -->
+    <div id="page-submit" class="page">
+
+      <button class="small-btn gray" onclick="openPage('detail')" style="margin-bottom:15px;">
+        ← Back
+      </button>
+
+      <div class="detail-card">
+
+        <h2>Submit Work</h2>
+
+        <p style="color:#777;margin:8px 0 18px;">
+          Apne project ka proof submit karein.
+        </p>
+
+        <div class="field">
+          <label>Screenshot / Proof URL</label>
+          <input
+            id="submissionScreenshot"
+            type="url"
+            placeholder="Screenshot ka link"
+          >
+        </div>
+
+        <div class="field">
+          <label>Submission / Remark</label>
+          <textarea
+            id="submissionText"
+            rows="5"
+            placeholder="Apne work ke baare mein likhein"
+          ></textarea>
+        </div>
+
+        <button class="btn btn-green" onclick="submitWork()">
+          Submit Work
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- MY SUBMISSIONS -->
+    <div id="page-submissions" class="page">
+
+      <div class="section-title">
+        My Submissions
+      </div>
+
+      <div id="mySubmissions">
+        <div class="loading">Loading...</div>
+      </div>
+
+    </div>
+
+
+    <!-- EARNING -->
+    <div id="page-earning" class="page">
+
+      <div class="section-title">
+        Earning
+      </div>
+
+      <div class="earning-card">
+
+        <div style="color:#777;">
+          Available Balance
+        </div>
+
+        <div class="earning-total" id="earningBalance">
+          ₹0
+        </div>
+
+        <button class="btn btn-green" onclick="requestWithdrawal()">
+          Withdraw
+        </button>
+
+      </div>
+
+      <div class="section-title">
+        Withdrawal History
+      </div>
+
+      <div id="withdrawalHistory">
+        <div class="loading">Loading...</div>
+      </div>
+
+    </div>
+
+
+    <!-- PROFILE -->
+    <div id="page-profile" class="page">
+
+      <div class="section-title">
+        Profile
+      </div>
+
+      <div class="profile-card">
+
+        <div class="field">
+          <label>Email</label>
+          <input id="profileEmail" type="email" disabled>
+        </div>
+
+        <div class="field">
+          <label>Name</label>
+          <input id="profileName" type="text" placeholder="Name">
+        </div>
+
+        <div class="field">
+          <label>Mobile</label>
+          <input id="profileMobile" type="tel" placeholder="Mobile">
+        </div>
+
+        <div class="section-title" style="font-size:17px;">
+          UPI Details
+        </div>
+
+        <div class="field">
+          <label>UPI App</label>
+
+          <select id="upiApp">
+            <option value="">Select UPI App</option>
+            <option value="PhonePe">PhonePe</option>
+            <option value="Google Pay">Google Pay</option>
+            <option value="Navi">Navi</option>
+            <option value="Other UPI">Other UPI</option>
+          </select>
+
+        </div>
+
+        <div class="field">
+          <label>UPI ID</label>
+          <input id="upiId" type="text" placeholder="example@upi">
+        </div>
+
+
+        <div class="section-title" style="font-size:17px;">
+          Bank Details
+        </div>
+
+        <div class="field">
+          <label>Account Holder Name</label>
+          <input id="accountHolderName" type="text">
+        </div>
+
+        <div class="field">
+          <label>Bank Name</label>
+          <input id="bankName" type="text">
+        </div>
+
+        <div class="field">
+          <label>Account Number</label>
+          <input id="accountNumber" type="text">
+        </div>
+
+        <div class="field">
+          <label>IFSC Code</label>
+          <input id="ifscCode" type="text">
+        </div>
+
+        <button class="btn" onclick="saveProfile()">
+          Save Profile
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- ADMIN -->
+    <div id="page-admin" class="page">
+
+      <div class="section-title">
+        Admin Dashboard
+      </div>
+
+
+      <!-- CREATE PROJECT -->
+      <div class="admin-box">
+
+        <h3>Create Project</h3>
+
+        <div class="field">
+          <label>Project Title</label>
+          <input id="adminProjectTitle" type="text">
+        </div>
+
+        <div class="field">
+          <label>Description</label>
+          <textarea id="adminProjectDescription" rows="3"></textarea>
+        </div>
+
+        <div class="field">
+          <label>Instructions</label>
+          <textarea id="adminProjectInstructions" rows="5"></textarea>
+        </div>
+
+        <div class="field">
+          <label>Reward / Earning</label>
+          <input id="adminProjectReward" type="number" min="0">
+        </div>
+
+        <div class="field">
+          <label>Deadline</label>
+          <input id="adminProjectDeadline" type="datetime-local">
+        </div>
+
+        <div class="field">
+          <label>Project Link</label>
+          <input id="adminProjectLink" type="url">
+        </div>
+
+        <div class="field">
+          <label>Project Type</label>
+
+          <select id="adminProjectType">
+
+            <option value="Other Link">
+              Other Link
+            </option>
+
+            <option value="Game">
+              Game
+            </option>
+
+            <option value="Shopping App">
+              Shopping App
+            </option>
+
+            <option value="UPI App">
+              UPI App
+            </option>
+
+            <option value="Demat App">
+              Demat App
+            </option>
+
+            <option value="Meesho">
+              Meesho
+            </option>
+
+            <option value="Flipkart">
+              Flipkart
+            </option>
+
+          </select>
+
+        </div>
+
+        <button class="btn btn-green" onclick="createProject()">
+          Create Project
+        </button>
+
+      </div>
+
+
+      <!-- ADMIN PROJECTS -->
+      <div class="admin-box">
+
+        <h3>Manage Projects</h3>
+
+        <div id="adminProjects">
+          <div class="loading">Loading...</div>
+        </div>
+
+      </div>
+
+
+      <!-- ADMIN SUBMISSIONS -->
+      <div class="admin-box">
+
+        <h3>Submissions</h3>
+
+        <div id="adminSubmissions">
+          <div class="loading">Loading...</div>
+        </div>
+
+      </div>
+
+
+      <!-- ADMIN WITHDRAWALS -->
+      <div class="admin-box">
+
+        <h3>Withdrawals</h3>
+
+        <div id="adminWithdrawals">
+          <div class="loading">Loading...</div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+
+    <button class="nav-btn active" onclick="openPage('home')">
+      <span class="icon">🏠</span>
+      Home
+    </button>
+
+    <button class="nav-btn" onclick="openPage('projects')">
+      <span class="icon">📋</span>
+      Projects
+    </button>
+
+    <button class="nav-btn" onclick="openPage('submissions')">
+      <span class="icon">📤</span>
+      My Work
+    </button>
+
+    <button class="nav-btn" onclick="openPage('earning')">
+      <span class="icon">💰</span>
+      Earning
+    </button>
+
+    <button class="nav-btn" onclick="openPage('profile')">
+      <span class="icon">👤</span>
+      Profile
+    </button>
+
+    <button id="adminNav" class="nav-btn hidden" onclick="openPage('admin')">
+      <span class="icon">⚙️</span>
+      Admin
+    </button>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  /* ================================
+     SUPABASE
+  ================================= */
+
+  const SUPABASE_URL =
+    "https://dyzovomxtyshtfftvocb.supabase.co";
+
+  const SUPABASE_KEY =
+    "sb_publishable_EJsYtBEjZU4LIqt4-rnWkQ_vrrTbJ48";
+
+  const supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+
+  /* ================================
+     GLOBAL VARIABLES
+  ================================= */
+
+  let currentUser = null;
+  let currentProfile = null;
+  let selectedProject = null;
+  let pendingProfile = null;
+
+
+  /* ================================
+     MESSAGE
+  ================================= */
+
+  function showMessage(message, type = "info") {
+
+    const box = document.getElementById("messageBox");
+
+    box.innerText = message;
+
+    box.className = "";
+    box.id = "messageBox";
+    box.classList.add(type);
+
+    box.style.display = "block";
+
+    setTimeout(() => {
+      box.style.display = "none";
+    }, 3500);
+  }
+
+
+  /* ================================
+     AUTH SCREEN
+  ================================= */
+
+  function showLogin() {
+
+    document.getElementById("loginBox")
+      .classList.remove("hidden");
+
+    document.getElementById("signupBox")
+      .classList.add("hidden");
+
+  }
+
+
+  function showSignup() {
+
+    document.getElementById("loginBox")
+      .classList.add("hidden");
+
+    document.getElementById("signupBox")
+      .classList.remove("hidden");
+
+  }
+
+
+  /* ================================
+     CREATE ACCOUNT
+  ================================= */
+
+  async function createAccount() {
+
+    const name =
+      document.getElementById("signupName").value.trim();
+
+    const mobile =
+      document.getElementById("signupMobile").value.trim();
+
+    const email =
+      document.getElementById("signupEmail").value.trim();
+
+    const password =
+      document.getElementById("signupPassword").value;
+
+
+    if (!name || !mobile || !email || !password) {
+
+      showMessage(
+        "Sabhi details bhariye.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (password.length < 6) {
+
+      showMessage(
+        "Password kam se kam 6 characters ka hona chahiye.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    try {
+
+      showMessage(
+        "Account create ho raha hai...",
+        "info"
+      );
+
+
+      const { data, error } =
+        await supabaseClient.auth.signUp({
+          email: email,
+          password: password
+        });
+
+
+      if (error) {
+        throw error;
+      }
+
+
+      pendingProfile = {
+        id: data.user ? data.user.id : null,
+        name: name,
+        mobile: mobile
+      };
+
+
+      if (data.session && data.user) {
+
+        currentUser = data.user;
+
+        await saveNewProfile(
+          data.user.id,
+          name,
+          mobile
+        );
+
+        showMessage(
+          "Account successfully create ho gaya.",
+          "success"
+        );
+
+        await afterLogin();
+
+      } else {
+
+        showMessage(
+          "Account ban gaya. Agar email verification aaye to email verify karke Login karein.",
+          "success"
+        );
+
+        showLogin();
+
+      }
+
+    } catch (error) {
+
+      console.error(error);
+
+      showMessage(
+        error.message || "Account create nahi hua.",
+        "error"
+      );
+
+    }
+
+  }
+
+
+  /* ================================
+     SAVE NEW PROFILE
+  ================================= */
+
+  async function saveNewProfile(id, name, mobile) {
+
+    if (!id) return;
+
+
+    const { error } =
+      await supabaseClient
+        .from("profiles")
+        .upsert({
+          id: id,
+          name: name,
+          mobile: mobile,
+          role: "user"
+        });
+
+
+    if (error) {
+
+      console.error(
+        "Profile error:",
+        error
+      );
+
+    }
+
+  }
+
+
+  /* ================================
+     LOGIN
+  ================================= */
+
+  async function loginUser() {
+
+    const email =
+      document.getElementById("loginEmail")
+        .value.trim();
+
+    const password =
+      document.getElementById("loginPassword")
+        .value;
+
+
+    if (!email || !password) {
+
+      showMessage(
+        "Email aur password bhariye.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    try {
+
+      showMessage(
+        "Login ho raha hai...",
+        "info"
+      );
+
+
+      const { data, error } =
+        await supabaseClient.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
+
+
+      if (error) {
+        throw error;
+      }
+
+
+      currentUser = data.user;
+
+      await afterLogin();
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      showMessage(
+        error.message || "Login failed.",
+        "error"
+      );
+
+    }
+
+  }
+
+
+  /* ================================
+     AFTER LOGIN
+  ================================= */
+
+  async function afterLogin() {
+
+    if (!currentUser) return;
+
+
+    document
+      .getElementById("authScreen")
+      .classList.add("hidden");
+
+    document
+      .getElementById("app")
+      .classList.remove("hidden");
+
+
+    await loadProfile();
+
+    await checkAdmin();
+
+    await loadHomeProjects();
+
+    await loadAllProjects();
+
+    await loadEarning();
+
+  }
+
+
+  /* ================================
+     LOGOUT
+  ================================= */
+
+  async function logoutUser() {
+
+    await supabaseClient.auth.signOut();
+
+    currentUser = null;
+    currentProfile = null;
+
+    document
+      .getElementById("app")
+      .classList.add("hidden");
+
+    document
+      .getElementById("authScreen")
+      .classList.remove("hidden");
+
+    showLogin();
+
+    showMessage(
+      "Logout ho gaya.",
+      "success"
+    );
+
+  }
+
+
+  /* ================================
+     PAGE NAVIGATION
+  ================================= */
+
+  function openPage(page) {
+
+    document
+      .querySelectorAll(".page")
+      .forEach(p => {
+        p.classList.remove("active");
+      });
+
+
+    const target =
+      document.getElementById(
+        "page-" + page
+      );
+
+
+    if (target) {
+      target.classList.add("active");
+    }
+
+
+    document
+      .querySelectorAll(".nav-btn")
+      .forEach(btn => {
+        btn.classList.remove("active");
+      });
+
+
+    if (page === "home") {
+      loadHomeProjects();
+    }
+
+    if (page === "projects") {
+      loadAllProjects();
+    }
+
+    if (page === "submissions") {
+      loadMySubmissions();
+    }
+
+    if (page === "earning") {
+      loadEarning();
+      loadWithdrawalHistory();
+    }
+
+    if (page === "profile") {
+      loadProfile();
+    }
+
+    if (page === "admin") {
+
+      loadAdminProjects();
+      loadAdminSubmissions();
+      loadAdminWithdrawals();
+
+    }
+
+  }
+
+
+  /* ================================
+     PROFILE
+  ================================= */
+
+  async function loadProfile() {
+
+    if (!currentUser) return;
+
+
+    document.getElementById("profileEmail")
+      .value = currentUser.email || "";
+
+
+    const { data, error } =
+      await supabaseClient
+        .from("profiles")
+        .select("*")
+        .eq("id", currentUser.id)
+        .maybeSingle();
+
+
+    if (error) {
+
+      console.error(error);
+
+      return;
+    }
+
+
+    currentProfile = data;
+
+
+    if (!data) {
+
+      if (pendingProfile) {
+
+        await saveNewProfile(
+          currentUser.id,
+          pendingProfile.name,
+          pendingProfile.mobile
+        );
+
+        pendingProfile = null;
+
+      }
+
+      return;
+    }
+
+
+    document.getElementById("profileName")
+      .value = data.name || "";
+
+    document.getElementById("profileMobile")
+      .value = data.mobile || "";
+
+    document.getElementById("upiApp")
+      .value = data.upi_app || "";
+
+    document.getElementById("upiId")
+      .value = data.upi_id || "";
+
+    document.getElementById("accountHolderName")
+      .value = data.account_holder_name || "";
+
+    document.getElementById("bankName")
+      .value = data.bank_name || "";
+
+    document.getElementById("accountNumber")
+      .value = data.account_number || "";
+
+    document.getElementById("ifscCode")
+      .value = data.ifsc_code || "";
+
+
+    document.getElementById("homeName")
+      .innerText =
+      data.name || "User";
+
+  }
+
+
+  async function saveProfile() {
+
+    if (!currentUser) return;
+
+
+    const profile = {
+
+      id: currentUser.id,
+
+      name:
+        document.getElementById("profileName")
+          .value.trim(),
+
+      mobile:
+        document.getElementById("profileMobile")
+          .value.trim(),
+
+      upi_app:
+        document.getElementById("upiApp")
+          .value,
+
+      upi_id:
+        document.getElementById("upiId")
+          .value.trim(),
+
+      account_holder_name:
+        document.getElementById("accountHolderName")
+          .value.trim(),
+
+      bank_name:
+        document.getElementById("bankName")
+          .value.trim(),
+
+      account_number:
+        document.getElementById("accountNumber")
+          .value.trim(),
+
+      ifsc_code:
+        document.getElementById("ifscCode")
+          .value.trim()
+
+    };
+
+
+    const { error } =
+      await supabaseClient
+        .from("profiles")
+        .upsert(profile);
+
+
+    if (error) {
+
+      console.error(error);
+
+      showMessage(
+        error.message,
+        "error"
+      );
+
+      return;
+    }
+
+
+    currentProfile = {
+      ...currentProfile,
+      ...profile
+    };
+
+
+    document.getElementById("homeName")
+      .innerText =
+      profile.name || "User";
+
+
+    showMessage(
+      "Profile save ho gaya.",
+      "success"
+    );
+
+  }
+
+
+  /* ================================
+     PROJECTS
+  ================================= */
+
+  async function loadHomeProjects() {
+
+    const box =
+      document.getElementById("homeProjects");
+
+
+    box.innerHTML =
+      `<div class="loading">Loading...</div>`;
+
+
+    const { data, error } =
+      await supabaseClient
+        .from("projects")
+        .select("*")
+        .eq("status", "active")
+        .order("created_at", {
+          ascending: false
+        })
+        .limit(6);
+
+
+    if (error) {
+
+      console.error(error);
+
+      box.innerHTML =
+        `<div class="empty">
+          Projects load nahi ho rahe.
+        </div>`;
+
+      return;
+    }
+
+
+    renderProjects(
+      data || [],
+      box
+    );
+
+  }
+
+
+  async function loadAllProjects() {
+
+    const box =
+      document.getElementById("allProjects");
+
+
+    box.innerHTML =
+      `<div class="loading">Loading...</div>`;
+
+
+    const { data, error } =
+      await supabaseClient
+        .from("projects")
+        .select("*")
+        .eq("status", "active")
+        .order("created_at", {
+          ascending: false
+        });
+
+
+    if (error) {
+
+      console.error(error);
+
+      box.innerHTML =
+        `<div class="empty">
+          Projects load nahi ho rahe.
+        </div>`;
+
+      return;
+    }
+
+
+    renderProjects(
+      data || [],
+      box
+    );
+
+  }
+
+
+  function renderProjects(
+    projects,
+    box
+  ) {
+
+    if (!projects.length) {
+
+      box.innerHTML =
+        `<div class="empty">
+          Abhi koi active project nahi hai.
+        </div>`;
+
+      return;
+    }
+
+
+    box.innerHTML = "";
+
+
+    projects.forEach(project => {
+
+      const card =
+        document.createElement("div");
+
+      card.className =
+        "project-card";
+
+
+      card.innerHTML = `
+
+        <span class="project-type">
+          ${escapeHtml(project.link_type || "Project")}
+        </span>
+
+        <h3>
+          ${escapeHtml(project.title || "Project")}
+        </h3>
+
+        <p>
+          ${escapeHtml(project.description || "")}
+        </p>
+
+        <div class="reward">
+          ₹${Number(project.reward || 0)}
+        </div>
+
+        <div class="project-actions">
+
+          <button
+            class="small-btn"
+            onclick="openProject('${project.id}')">
+            Details
+          </button>
+
+          <button
+            class="small-btn green"
+            onclick="openSubmitPage('${project.id}')">
+            Submit
+          </button>
+
+        </div>
+      `;
+
+
+      box.appendChild(card);
+
+    });
+
+  }
+
+
+  /* ================================
+     ESCAPE HTML
+  ================================= */
+
+  function escapeHtml(value) {
+
+    if (value === null ||
+        value === undefined) {
+      return "";
+    }
+
+
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+
+  }
+
+
+  /* ================================
+     OPEN PROJECT
+  ================================= */
+
+  async function openProject(projectId) {
+
+    const { data, error } =
+      await supabaseClient
+        .from("projects")
+        .select("*")
+        .eq("id", projectId)
+        .maybeSingle();
+
+
+    if (error) {
+
+      showMessage(
+        error.message,
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (!data) {
+
+      showMessage(
+        "Project nahi mila.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    selectedProject = data;
+
+
+    const detail =
+      document.getElementById(
+        "projectDetail"
+      );
+
+
+    detail.innerHTML = `
+
+      <div class="detail-card">
+
+        <span class="project-type">
+          ${escapeHtml(data.link_type || "Project")}
+        </span>
+
+        <h2>
+          ${escapeHtml(data.title || "Project")}
+        </h2>
+
+        <div class="reward">
+          ₹${Number(data.reward || 0)}
+        </div>
+
+        <div class="detail-row">
+
+          <div class="detail-label">
+            Description
+          </div>
+
+          <div class="detail-value">
+            ${escapeHtml(data.description || "")}
+          </div>
+
+        </div>
+
+        <div class="detail-row">
+
+          <div class="detail-label">
+            Instructions
+          </div>
+
+          <div class="detail-value">
+            ${escapeHtml(data.instructions || "")}
+          </div>
+
+        </div>
+
+        <div class="detail-row">
+
+          <div class="detail-label">
+            Deadline
+          </div>
+
+          <div class="detail-value">
+            ${
+              data.deadline
+              ? new Date(data.deadline).toLocaleString("en-IN")
+              : "No deadline"
+            }
+          </div>
+
+        </div>
+
+        ${
+          data.link
+          ? `
+            <div class="detail-row">
+
+              <div class="detail-label">
+                Project Link
+              </div>
+
+              <div class="link-box">
+                ${escapeHtml(data.link)}
+              </div>
+
+              <button
+                class="btn"
+                onclick="window.open('${safeUrl(data.link)}','_blank')">
+                Open Link
+              </button>
+
+            </div>
+          `
+          : ""
+        }
+
+        <button
+          class="btn btn-green"
+          style="margin-top:15px;"
+          onclick="openSubmitPage('${data.id}')">
+          Submit Work
+        </button>
+
+      </div>
+
+    `;
+
+
+    openPage("detail");
+
+  }
+
+
+  /* ================================
+     SAFE URL
+  ================================= */
+
+  function safeUrl(url) {
+
+    if (!url) return "#";
+
+
+    try {
+
+      const parsed =
+        new URL(url);
+
+      if (
+        parsed.protocol === "http:" ||
+        parsed.protocol === "https:"
+      ) {
+        return parsed.href
+          .replaceAll("'", "%27");
+      }
+
+    } catch (e) {}
+
+
+    return "#";
+
+  }
+
+
+  /* ================================
+     SUBMIT PAGE
+  ================================= */
+
+  async function openSubmitPage(projectId) {
+
+    const { data, error } =
+      await supabaseClient
+        .from("projects")
+        .select("*")
+        .eq("id", projectId)
+        .maybeSingle();
+
+
+    if (error) {
+
+      showMessage(
+        error.message,
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (!data) {
+
+      showMessage(
+        "Project nahi mila.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    selectedProject = data;
+
+
+    document.getElementById(
+      "submissionScreenshot"
+    ).value = "";
+
+
+    document.getElementById(
+      "submissionText"
+    ).value = "";
+
+
+    openPage("submit");
+
+  }
+
+
+  /* ================================
+     SUBMIT WORK
+  ================================= */
+
+  async function submitWork() {
+
+    if (!currentUser) {
+
+      showMessage(
+        "Pehle login karein.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (!selectedProject) {
+
+      showMessage(
+        "Project select nahi hua.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    const screenshot =
+      document.getElementById(
+        "submissionScreenshot"
+      ).value.trim();
+
+
+    const submission =
+      document.getElementById(
+        "submissionText"
+      ).value.trim();
+
+
+    if (!screenshot || !submission) {
+
+      showMessage(
+        "Screenshot URL aur submission details bhariye.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    const { error } =
+      await supabaseClient
+        .from("Submission")
+        .insert({
+
+          "Project_id":
+            selectedProject.id,
+
+          "User_id":
+            currentUser.id,
+
+          "Screenshot_url":
+            screenshot,
+
+          "Submission":
+            submission,
+
+          status:
+            "pending"
+
+        });
+
+
+    if (error) {
+
+      console.error(error);
+
+      showMessage(
+        error.message,
+        "error"
+      );
+
+      return;
+    }
+
+
+    showMessage(
+      "Work successfully submit ho gaya.",
+      "success"
+    );
+
+
+    openPage("submissions");
+
+    await loadMySubmissions();
+
+  }
+
+
+  /* ================================
+     MY SUBMISSIONS
+  ================================= */
+
+  async function loadMySubmissions() {
+
+    if (!currentUser) return;
+
+
+    const box =
+      document.getElementById(
+        "mySubmissions"
+      );
+
+
+    box.innerHTML =
+      `<div class="loading">Loading...</div>`;
+
+
+    const { data, error } =
+      await supabaseClient
+        .from("Submission")
+        .select("*")
+        .eq("User_id", currentUser.id)
+        .order("Id", {
+          ascending: false
+        });
+
+
+    if (error) {
+
+      console.error(error);
+
+      box.innerHTML =
+        `<div class="empty">
+          ${escapeHtml(error.message)}
+        </div>`;
+
+      return;
+    }
+
+
+    if (!data || !data.length) {
+
+      box.innerHTML =
+        `<div class="empty">
+          Aapne abhi koi work submit nahi kiya.
+        </div>`;
+
+      return;
+    }
+
+
+    box.innerHTML = "";
+
+
+    data.forEach(item => {
+
+      const div =
+        document.createElement("div");
+
+      div.className =
+        "submission-card";
+
+
+      div.innerHTML = `
+
+        <div style="margin-bottom:8px;">
+          <b>Project ID</b>
+          <br>
+          <small>
+            ${escapeHtml(item.Project_id)}
+          </small>
+        </div>
+
+        <div style="margin-bottom:8px;">
+          <b>Submission</b>
+          <br>
+          ${escapeHtml(item.Submission || "")}
+        </div>
+
+        ${
+          item.Screenshot_url
+          ? `
+            <div style="margin-bottom:8px;">
+              <a
+                href="${safeUrl(item.Screenshot_url)}"
+                target="_blank">
+                View Proof
+              </a>
+            </div>
+          `
+          : ""
+        }
+
+        <span class="status ${item.status}">
+          ${escapeHtml(item.status)}
+        </span>
+
+      `;
+
+
+      box.appendChild(div);
+
+    });
+
+  }
+
+
+  /* ================================
+     EARNING
+  ================================= */
+
+  async function loadEarning() {
+
+    if (!currentUser) return;
+
+
+    const { data, error } =
+      await supabaseClient
+        .from("user_earning_balance")
+        .select("available_balance")
+        .eq("user_id", currentUser.id)
+        .maybeSingle();
+
+
+    if (error) {
+
+      console.error(error);
+
+      return;
+    }
+
+
+    const balance =
+      data
+      ? Number(data.available_balance || 0)
+      : 0;
+
+
+    document.getElementById(
+      "homeBalance"
+    ).innerText =
+      "₹" + balance.toFixed(2);
+
+
+    document.getElementById(
+      "earningBalance"
+    ).innerText =
+      "₹" + balance.toFixed(2);
+
+  }
+
+
+  /* ================================
+     WITHDRAWAL
+  ================================= */
+
+  async function requestWithdrawal() {
+
+    if (!currentUser) return;
+
+
+    await loadProfile();
+
+
+    const { data: balanceData } =
+      await supabaseClient
+        .from("user_earning_balance")
+        .select("available_balance")
+        .eq("user_id", currentUser.id)
+        .maybeSingle();
+
+
+    const balance =
+      balanceData
+      ? Number(balanceData.available_balance || 0)
+      : 0;
+
+
+    if (balance < 10) {
+
+      showMessage(
+        "Withdrawal ke liye minimum ₹10 available hona chahiye.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    const hasUpi =
+      currentProfile &&
+      currentProfile.upi_app &&
+      currentProfile.upi_id;
+
+
+    const hasBank =
+      currentProfile &&
+      currentProfile.account_holder_name &&
+      currentProfile.bank_name &&
+      currentProfile.account_number &&
+      currentProfile.ifsc_code;
+
+
+    if (!hasUpi && !hasBank) {
+
+      showMessage(
+        "Pehle Profile mein UPI ya Bank details save karein.",
+        "error"
+      );
+
+      openPage("profile");
+
+      return;
+    }
+
+
+    let method = "UPI";
+
+
+    if (!hasUpi && hasBank) {
+      method = "Bank";
+    }
+
+
+    const amountText =
+      prompt(
+        `Available Earning: ₹${balance.toFixed(2)}\n\nKitna withdraw karna hai?`
+      );
+
+
+    if (amountText === null) return;
+
+
+    const amount =
+      Number(amountText);
+
+
+    if (
+      !Number.isFinite(amount) ||
+      amount < 10
+    ) {
+
+      showMessage(
+        "Minimum ₹10 ka valid amount dalein.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (amount > balance) {
+
+      showMessage(
+        "Aapke available balance se zyada amount nahi ho sakta.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    const payment = {
+
+      "Users id":
+        currentUser.id,
+
+      "Amount":
+        amount,
+
+      "Status":
+        "pending",
+
+      "Payment method":
+        method,
+
+      upi_app:
+        method === "UPI"
+        ? currentProfile.upi_app
+        : null,
+
+      upi_id:
+        method === "UPI"
+        ? currentProfile.upi_id
+        : null,
+
+      account_holder_name:
+        method === "Bank"
+        ? currentProfile.account_holder_name
+        : null,
+
+      bank_name:
+        method === "Bank"
+        ? currentProfile.bank_name
+        : null,
+
+      account_number:
+        method === "Bank"
+        ? currentProfile.account_number
+        : null,
+
+      ifsc_code:
+        method === "Bank"
+        ? currentProfile.ifsc_code
+        : null
+
+    };
+
+
+    const { error } =
+      await supabaseClient
+        .from("Payment")
+        .insert(payment);
+
+
+    if (error) {
+
+      console.error(error);
+
+      showMessage(
+        error.message,
+        "error"
+      );
+
+      return;
+    }
+
+
+    showMessage(
+      "Withdrawal request submit ho gayi.",
+      "success"
+    );
+
+
+    await loadEarning();
+
+    await loadWithdrawalHistory();
+
+  }
+
+
+  /* ================================
+     WITHDRAWAL HISTORY
+  ================================= */
+
+  async function loadWithdrawalHistory() {
+
+    if (!currentUser) return;
+
+
+    const box =
+      document.getElementById(
+        "withdrawalHistory"
+      );
+
+
+    if (!box) return;
+
+
+    box.innerHTML =
+      `<div class="loading">Loading...</div>`;
+
+
+    const { data, error } =
+      await supabaseClient
+        .from("withdrawal_history")
+        .select("*")
+        .eq("user_id", currentUser.id)
+        .order("created_at", {
+          ascending: false
+        });
+
+
+    if (error) {
+
+      console.error(error);
+
+      box.innerHTML =
+        `<div class="empty">
+          ${escapeHtml(error.message)}
+        </div>`;
+
+      return;
+    }
+
+
+    if (!data || !data.length) {
+
+      box.innerHTML =
+        `<div class="empty">
+          Abhi withdrawal history nahi hai.
+        </div>`;
+
+      return;
+    }
+
+
+    box.innerHTML = "";
+
+
+    data.forEach(item => {
+
+      const div =
+        document.createElement("div");
+
+      div.className =
+        "submission-card";
+
+
+      div.innerHTML = `
+
+        <div style="font-size:22px;font-weight:bold;">
+          ₹${Number(item.amount || 0).toFixed(2)}
+        </div>
+
+        <div style="margin:7px 0;">
+          ${escapeHtml(item.payment_method || "")}
+        </div>
+
+        <span class="status ${item.status}">
+          ${escapeHtml(item.status)}
+        </span>
+
+        <div style="margin-top:8px;font-size:12px;color:#777;">
+          Transaction ID:
+          ${escapeHtml(item.transaction_id || "Pending")}
+        </div>
+
+        <div style="margin-top:5px;font-size:12px;color:#777;">
+          ${
+            item.created_at
+            ? new Date(item.created_at).toLocaleString("en-IN")
+            : ""
+          }
+        </div>
+
+      `;
+
+
+      box.appendChild(div);
+
+    });
+
+  }
+
+
+  /* ================================
+     ADMIN CHECK
+  ================================= */
+
+  async function checkAdmin() {
+
+    if (!currentUser) return;
+
+
+    const { data, error } =
+      await supabaseClient
+        .from("profiles")
+        .select("role")
+        .eq("id", currentUser.id)
+        .maybeSingle();
+
+
+    if (error) {
+
+      console.error(error);
+
+      return;
+    }
+
+
+    currentProfile = {
+      ...currentProfile,
+      ...data
+    };
+
+
+    const admin =
+      data &&
+      (
+        data.role === "admin" ||
+        data.role === "parent"
+      );
+
+
+    const adminNav =
+      document.getElementById("adminNav");
+
+
+    if (admin) {
+
+      adminNav.classList.remove("hidden");
+
+    } else {
+
+      adminNav.classList.add("hidden");
+
+    }
+
+  }
+
+
+  /* ================================
+     ADMIN PROJECT CREATE
+  ================================= */
+
+  async function createProject() {
+
+    if (!currentUser) return;
+
+
+    const allowed =
+      currentProfile &&
+      (
+        currentProfile.role === "admin" ||
+        currentProfile.role === "parent"
+      );
+
+
+    if (!allowed) {
+
+      showMessage(
+        "Admin permission required.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    const title =
+      document.getElementById(
+        "adminProjectTitle"
+      ).value.trim();
+
+
+    const description =
+      document.getElementById(
+        "adminProjectDescription"
+      ).value.trim();
+
+
+    const instructions =
+      document.getElementById(
+        "adminProjectInstructions"
+      ).value.trim();
+
+
+    const reward =
+      Number(
+        document.getElementById(
+          "adminProjectReward"
+        ).value
+      );
+
+
+    const deadline =
+      document.getElementById(
+        "adminProjectDeadline"
+      ).value;
+
+
+    const link =
+      document.getElementById(
+        "adminProjectLink"
+      ).value.trim();
+
+
+    const linkType =
+      document.getElementById(
+        "adminProjectType"
+      ).value;
+
+
+    if (!title) {
+
+      showMessage(
+        "Project title bhariye.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (!Number.isFinite(reward)) {
+
+      showMessage(
+        "Valid earning amount dalein.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    const project = {
+
+      title:
+        title,
+
+      description:
+        description,
+
+      instructions:
+        instructions,
+
+      reward:
+        reward,
+
+      deadline:
+        deadline
+        ? new Date(deadline).toISOString()
+        : null,
+
+      link:
+        link || null,
+
+      status:
+        "active",
+
+      created_by:
+        currentUser.id,
+
+      link_type:
+        linkType
+
+    };
+
+
+    const { error } =
+      await supabaseClient
+        .from("projects")
+        .insert(project);
+
+
+    if (error) {
+
+      console.error(error);
+
+      showMessage(
+        error.message,
+        "error"
+      );
+
+      return;
+    }
+
+
+    document.getElementById(
+      "adminProjectTitle"
+    ).value = "";
+
+    document.getElementById(
+      "adminProjectDescription"
+    ).value = "";
+
+    document.getElementById(
+      "adminProjectInstructions"
+    ).value = "";
+
+    document.getElementById(
+      "adminProjectReward"
+    ).value = "";
+
+    document.getElementById(
+      "adminProjectDeadline"
+    ).value = "";
+
+    document.getElementById(
+      "adminProjectLink"
+    ).value = "";
+
+
+    showMessage(
+      "Project create ho gaya.",
+      "success"
+    );
+
+
+    await loadAdminProjects();
+
+    await loadHomeProjects();
+
+    await loadAllProjects();
+
+  }
+
+
+  /* ================================
+     ADMIN PROJECTS
+  ================================= */
+
+  async function loadAdminProjects() {
+
+    const box =
+      document.getElementById(
+        "adminProjects"
+      );
+
+
+    if (!box) return;
+
+
+    box.innerHTML =
+      `<div class="loading">Loading...</div>`;
+
+
+    const { data, error } =
+      await supabaseClient
+        .from("projects")
+        .select("*")
+        .order("created_at", {
+          ascending: false
+        });
+
+
+    if (error) {
+
+      box.innerHTML =
+        `<div class="empty">
+          ${escapeHtml(error.message)}
+        </div>`;
+
+      return;
+    }
+
+
+    if (!data || !data.length) {
+
+      box.innerHTML =
+        `<div class="empty">
+          Koi project nahi hai.
+        </div>`;
+
+      return;
+    }
+
+
+    box.innerHTML = "";
+
+
+    data.forEach(project => {
+
+      const div =
+        document.createElement("div");
+
+      div.className =
+        "admin-project";
+
+
+      const active =
+        project.status === "active";
+
+
+      div.innerHTML = `
+
+        <b>
+          ${escapeHtml(project.title)}
+        </b>
+
+        <div style="margin:5px 0;">
+          Earning:
+          <b>₹${Number(project.reward || 0)}</b>
+        </div>
+
+        <div style="font-size:12px;color:#777;">
+          Type:
+          ${escapeHtml(project.link_type || "")}
+        </div>
+
+        <div style="margin-top:5px;">
+          <span class="status ${active ? "approved" : "rejected"}">
+            ${escapeHtml(project.status || "")}
+          </span>
+        </div>
+
+        <div class="admin-project-actions">
+
+          <button
+            style="background:${active ? "#d63031" : "#00b894"}"
+            onclick="toggleProject('${project.id}', '${active ? "inactive" : "active"}')">
+
+            ${active ? "Deactivate" : "Activate"}
+
+          </button>
+
+        </div>
+
+      `;
+
+
+      box.appendChild(div);
+
+    });
+
+  }
+
+
+  /* ================================
+     TOGGLE PROJECT
+  ================================= */
+
+  async function toggleProject(
+    projectId,
+    newStatus
+  ) {
+
+    const { error } =
+      await supabaseClient
+        .from("projects")
+        .update({
+          status: newStatus
+        })
+        .eq("id", projectId);
+
+
+    if (error) {
+
+      showMessage(
+        error.message,
+        "error"
+      );
+
+      return;
+    }
+
+
+    showMessage(
+      "Project status update ho gaya.",
+      "success"
+    );
+
+
+    await loadAdminProjects();
+
+    await loadHomeProjects();
+
+    await loadAllProjects();
+
+  }
+
+
+  /* ================================
+     ADMIN SUBMISSIONS
+  ================================= */
+
+  async function loadAdminSubmissions() {
+
+    const box =
+      document.getElementById(
+        "adminSubmissions"
+      );
+
+
+    if (!box) return;
+
+
+    box.innerHTML =
+      `<div class="loading">Loading...</div>`;
+
+
+    const { data, error } =
+      await supabaseClient
+        .from("Submission")
+        .select("*")
+        .order("Id", {
+          ascending: false
+        });
+
+
+    if (error) {
+
+      console.error(error);
+
+      box.innerHTML =
+        `<div class="empty">
+          ${escapeHtml(error.message)}
+        </div>`;
+
+      return;
+    }
+
+
+    if (!data || !data.length) {
+
+      box.innerHTML =
+        `<div class="empty">
+          Koi submission nahi hai.
+        </div>`;
+
+      return;
+    }
+
+
+    box.innerHTML = "";
+
+
+    data.forEach(item => {
+
+      const div =
+        document.createElement("div");
+
+      div.className =
+        "admin-submission";
+
+
+      div.innerHTML = `
+
+        <div>
+          <b>Project ID:</b>
+          <br>
+          <small>
+            ${escapeHtml(item.Project_id)}
+          </small>
+        </div>
+
+        <div style="margin-top:7px;">
+          <b>User ID:</b>
+          <br>
+          <small>
+            ${escapeHtml(item.User_id)}
+          </small>
+        </div>
+
+        <div style="margin-top:8px;">
+          <b>Submission:</b>
+          <br>
+          ${escapeHtml(item.Submission || "")}
+        </div>
+
+        ${
+          item.Screenshot_url
+          ? `
+            <div style="margin-top:8px;">
+              <a
+                href="${safeUrl(item.Screenshot_url)}"
+                target="_blank">
+                Open Proof
+              </a>
+            </div>
+          `
+          : ""
+        }
+
+        <div style="margin-top:8px;">
+          <span class="status ${item.status}">
+            ${escapeHtml(item.status)}
+          </span>
+        </div>
+
+        ${
+          item.status === "pending"
+          ? `
+            <div class="admin-project-actions">
+
+              <button
+                style="background:#00b894"
+                onclick="reviewSubmission('${item.Id}', 'approved')">
+                Approve
+              </button>
+
+              <button
+                style="background:#d63031"
+                onclick="reviewSubmission('${item.Id}', 'rejected')">
+                Reject
+              </button>
+
+            </div>
+          `
+          : ""
+        }
+
+      `;
+
+
+      box.appendChild(div);
+
+    });
+
+  }
+
+
+  /* ================================
+     REVIEW SUBMISSION
+  ================================= */
+
+  async function reviewSubmission(
+    submissionId,
+    newStatus
+  ) {
+
+    const { error } =
+      await supabaseClient
+        .from("Submission")
+        .update({
+          status: newStatus
+        })
+        .eq("Id", submissionId);
+
+
+    if (error) {
+
+      console.error(error);
+
+      showMessage(
+        error.message,
+        "error"
+      );
+
+      return;
+    }
+
+
+    showMessage(
+      newStatus === "approved"
+      ? "Submission approve ho gayi. Earning automatically add hogi."
+      : "Submission reject ho gayi.",
+      "success"
+    );
+
+
+    await loadAdminSubmissions();
+
+  }
+
+
+  /* ================================
+     ADMIN WITHDRAWALS
+  ================================= */
+
+  async function loadAdminWithdrawals() {
+
+    const box =
+      document.getElementById(
+        "adminWithdrawals"
+      );
+
+
+    if (!box) return;
+
+
+    box.innerHTML =
+      `<div class="loading">Loading...</div>`;
+
+
+    const { data, error } =
+      await supabaseClient
+        .from("admin_withdrawals")
+        .select("*")
+        .order("created_at", {
+          ascending: false
+        });
+
+
+    if (error) {
+
+      console.error(error);
+
+      box.innerHTML =
+        `<div class="empty">
+          ${escapeHtml(error.message)}
+        </div>`;
+
+      return;
+    }
+
+
+    if (!data || !data.length) {
+
+      box.innerHTML =
+        `<div class="empty">
+          Koi withdrawal request nahi hai.
+        </div>`;
+
+      return;
+    }
+
+
+    box.innerHTML = "";
+
+
+    data.forEach(item => {
+
+      const div =
+        document.createElement("div");
+
+      div.className =
+        "admin-submission";
+
+
+      div.innerHTML = `
+
+        <div style="font-size:20px;font-weight:bold;">
+          ₹${Number(item.amount || 0).toFixed(2)}
+        </div>
+
+        <div style="margin-top:8px;">
+          <b>Name:</b>
+          ${escapeHtml(item.user_name || "Unknown")}
+        </div>
+
+        <div>
+          <b>Mobile:</b>
+          ${escapeHtml(item.user_mobile || "")}
+        </div>
+
+        <div style="margin-top:8px;">
+          <b>Method:</b>
+          ${escapeHtml(item.payment_method || "")}
+        </div>
+
+        ${
+          item.payment_method === "UPI"
+          ? `
+            <div>
+              <b>UPI App:</b>
+              ${escapeHtml(item.upi_app || "")}
+            </div>
+
+            <div>
+              <b>UPI ID:</b>
+              ${escapeHtml(item.upi_id || "")}
+            </div>
+          `
+          : `
+            <div>
+              <b>Account Holder:</b>
+              ${escapeHtml(item.account_holder_name || "")}
+            </div>
+
+            <div>
+              <b>Bank:</b>
+              ${escapeHtml(item.bank_name || "")}
+            </div>
+
+            <div>
+              <b>Account:</b>
+              ${escapeHtml(item.account_number || "")}
+            </div>
+
+            <div>
+              <b>IFSC:</b>
+              ${escapeHtml(item.ifsc_code || "")}
+            </div>
+          `
+        }
+
+        <div style="margin-top:8px;">
+          <span class="status ${item.status}">
+            ${escapeHtml(item.status)}
+          </span>
+        </div>
+
+        <div style="margin-top:7px;font-size:12px;color:#777;">
+          Transaction ID:
+          ${escapeHtml(item.transaction_id || "Pending")}
+        </div>
+
+        ${
+          item.status === "pending"
+          ? `
+            <div class="admin-project-actions">
+
+              <button
+                style="background:#00b894"
+                onclick="updatePayment('${escapeJs(item.transaction_id)}','paid')">
+                Mark Paid
+              </button>
+
+              <button
+                style="background:#d63031"
+                onclick="updatePayment('${escapeJs(item.transaction_id)}','rejected')">
+                Reject
+              </button>
+
+            </div>
+          `
+          : ""
+        }
+
+      `;
+
+
+      box.appendChild(div);
+
+    });
+
+  }
+
+
+  /* ================================
+     ESCAPE JS
+  ================================= */
+
+  function escapeJs(value) {
+
+    return String(value || "")
+      .replaceAll("\\", "\\\\")
+      .replaceAll("'", "\\'");
+
+  }
+
+
+  /* ================================
+     UPDATE PAYMENT
+  ================================= */
+
+  async function updatePayment(
+    transactionId,
+    newStatus
+  ) {
+
+    if (!transactionId) {
+
+      showMessage(
+        "Transaction ID nahi mila.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    const { error } =
+      await supabaseClient
+        .from("Payment")
+        .update({
+          "Status": newStatus
+        })
+        .eq(
+          "Transition id",
+          transactionId
+        );
+
+
+    if (error) {
+
+      console.error(error);
+
+      showMessage(
+        error.message,
+        "error"
+      );
+
+      return;
+    }
+
+
+    showMessage(
+      newStatus === "paid"
+      ? "Payment Paid mark ho gaya."
+      : "Payment Reject ho gaya.",
+      "success"
+    );
+
+
+    await loadAdminWithdrawals();
+
+  }
+
+
+  /* ================================
+     START APP
+  ================================= */
+
+  async function startApp() {
+
+    try {
+
+      const {
+        data
+      } =
+        await supabaseClient.auth.getSession();
+
+
+      if (
+        data &&
+        data.session &&
+        data.session.user
+      ) {
+
+        currentUser =
+          data.session.user;
+
+        await afterLogin();
+
+      } else {
+
+        document
+          .getElementById("authScreen")
+          .classList.remove("hidden");
+
+        document
+          .getElementById("app")
+          .classList.add("hidden");
+
+      }
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+
+  /* ================================
+     AUTH STATE CHANGE
+  ================================= */
+
+  supabaseClient.auth.onAuthStateChange(
+    async (event, session) => {
+
+      if (
+        session &&
+        session.user
+      ) {
+
+        currentUser =
+          session.user;
+
+      }
+
+    }
+  );
+
+
+  /* ================================
+     START
+  ================================= */
+
+  startApp();
+
+</script>
+
+</body>
+</html>
